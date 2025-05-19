@@ -1,3 +1,14 @@
 <resources>
     <string name="app_name">TagesBluete</string>
+    <string name="TagesBlüte">Tagesblüte</string>
+    <string name="registrieren">Registrieren</string>
+    <string name="login">Login</string>
+    <string name="tagesbl_te">TagesBlüte</string>
+    <string name="anmelden">Anmelden</string>
+    <string name="passwort_eingeben">Passwort eingeben</string>
+    <string name="passwort">Passwort</string>
+    <string name="nutzername">Nutzername</string>
+    <string name="z_b_vorname_nachname">z.B vorname.nachname</string>
+    <string name="passwort_erneut_eingeben">Passwort erneut eingeben</string>
+    <string name="passwort_wiederholen">Passwort wiederholen</string>
 </resources>

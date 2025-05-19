@@ -13,6 +13,30 @@
         android:theme="@style/Theme.TagesBluete"
         tools:targetApi="31">
         <activity
+            android:name=".Sturzerkennung"
+            android:exported="false" />
+        <activity
+            android:name=".Garten"
+            android:exported="false" />
+        <activity
+            android:name=".NotfallkontaktVerwalten"
+            android:exported="false" />
+        <activity
+            android:name=".neueAufgaben"
+            android:exported="false" />
+        <activity
+            android:name=".Tagesplan"
+            android:exported="false" />
+        <activity
+            android:name=".StartUebersicht"
+            android:exported="false" />
+        <activity
+            android:name=".Registrieren"
+            android:exported="false" />
+        <activity
+            android:name=".Login"
+            android:exported="false" />
+        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
