@@ -11,4 +11,8 @@
     <string name="z_b_vorname_nachname">z.B vorname.nachname</string>
     <string name="passwort_erneut_eingeben">Passwort erneut eingeben</string>
     <string name="passwort_wiederholen">Passwort wiederholen</string>
+    <string name="heute">Heute</string>
+    <string name="tagesplan">Tagesplan</string>
+    <string name="mein_garten">Mein Garten</string>
+    <string name="notfallkontakt">Notfallkontakte</string>
 </resources>

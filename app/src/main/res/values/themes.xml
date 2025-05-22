@@ -1,8 +1,11 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
     <style name="Base.Theme.TagesBluete" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+
+        <item name="colorPrimary">@color/petrolDunkel</item>
+        <item name="colorSecondary">@color/petrolMittel</item>
+        <item name="colorBackgroundFloating">@color/petrolHell</item>
+
     </style>
 
     <style name="Theme.TagesBluete" parent="Base.Theme.TagesBluete" />
