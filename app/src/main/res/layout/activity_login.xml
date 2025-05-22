@@ -61,10 +61,10 @@
 
     <!-- Bestätigen-Button -->
     <Button
-        android:id="@+id/loginButton"
+        android:id="@+id/loginBestätigenButton"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="@string/anmelden"
+        android:text="@string/bestätigen"
         app:layout_constraintTop_toBottomOf="@id/passwordInput"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

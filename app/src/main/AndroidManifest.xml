@@ -22,7 +22,7 @@
             android:name=".NotfallkontaktVerwalten"
             android:exported="false" />
         <activity
-            android:name=".neueAufgaben"
+            android:name=".NeueAufgaben"
             android:exported="false" />
         <activity
             android:name=".Tagesplan"

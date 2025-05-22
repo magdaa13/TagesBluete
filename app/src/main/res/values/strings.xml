@@ -3,6 +3,7 @@
     <string name="TagesBlüte">Tagesblüte</string>
     <string name="registrieren">Ich habe noch kein Konto</string>
     <string name="login">Ich habe bereits ein Konto</string>
+    <string name="bestätigen">Bestätigen</string>
     <string name="tagesbl_te">TagesBlüte</string>
     <string name="anmelden">Anmelden</string>
     <string name="passwort_eingeben">Passwort eingeben</string>
