@@ -16,4 +16,5 @@ public interface BenutzerDAO {
     @Query("SELECT * FROM Benutzer WHERE benutzername = :benutzername LIMIT 1")
     Benutzer findByUsername(String benutzername);
 
+
 }

@@ -5,7 +5,7 @@
         <item name="colorPrimary">@color/petrolDunkel</item>
         <item name="colorSecondary">@color/petrolMittel</item>
         <item name="colorBackgroundFloating">@color/petrolHell</item>
-
+        <item name="android:fontFamily">@font/font</item>
     </style>
 
     <style name="Theme.TagesBluete" parent="Base.Theme.TagesBluete" />
