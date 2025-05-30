@@ -16,4 +16,12 @@
     <string name="tagesplan">Tagesplan</string>
     <string name="mein_garten">Mein Garten</string>
     <string name="notfallkontakt">Notfallkontakte</string>
+    <string name="willkommen">Willkommen!</string>
+    <string name="heutige_aufgaben">Heutige Aufgaben</string>
+    <string name="uhrzeit">Uhrzeit</string>
+    <string name="datum">Datum</string>
+    <string name="titel">Titel der neuen Aufgabe\n</string>
+    <string name="neue_aufgabe_hinzuf_gen">Neue Aufgabe hinzufügen</string>
+    <string-array name="wiederholungsoption"><item>Einmalig</item><item>Täglich</item><item>Wöchentlich</item>
+    </string-array>
 </resources>

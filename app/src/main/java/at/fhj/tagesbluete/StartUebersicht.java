@@ -1,13 +1,13 @@
 package at.fhj.tagesbluete;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -21,10 +21,25 @@ public class StartUebersicht extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_start_uebersicht);
 
-        TextView dateTextview = findViewById(R.id.dateText);
+        Button buttonTagesplan = findViewById(R.id.buttonTagesplan);
+        buttonTagesplan.setOnClickListener(v -> {
+            startActivity(new Intent(StartUebersicht.this, Tagesplan.class));
+        });
 
-        String currentDate = new SimpleDateFormat("EEEE, dd. MMMM yyyy", Locale.GERMAN).format(new Date());
+        Button buttonMeinGarten = findViewById(R.id.buttonMeinGarten);
+        buttonMeinGarten.setOnClickListener(v -> {
+                    startActivity(new Intent(StartUebersicht.this, Garten.class));
+        });
 
-        dateTextview.setText(currentDate);
+        Button buttonNotfallkontakt = findViewById(R.id.buttonNotfallkontakte);
+        buttonNotfallkontakt.setOnClickListener(v -> {
+            startActivity(new Intent(StartUebersicht.this, NotfallkontaktVerwalten.class));
+        });
+
+
+        TextView dateText = findViewById(R.id.dateText);
+       SimpleDateFormat sdf = new SimpleDateFormat("EEEE, d.M.yyyy", Locale.GERMAN);;
+       String currentDate = sdf.format(new Date());
+       dateText.setText(currentDate);
     }
 }

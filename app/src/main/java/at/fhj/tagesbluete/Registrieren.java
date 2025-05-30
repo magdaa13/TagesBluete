@@ -1,6 +1,7 @@
 package at.fhj.tagesbluete;
 
-import android.annotation.SuppressLint;
+
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -16,13 +17,13 @@ import androidx.core.view.WindowInsetsCompat;
 public class Registrieren extends AppCompatActivity {
 
     public BenutzerDAO benutzerDAO;
-    @SuppressLint("MissingInflatedId")
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_registrieren);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), ((v, insets) ->
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.register_layout), ((v, insets) ->
         { Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
         v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
         return insets;
@@ -64,6 +65,10 @@ public class Registrieren extends AppCompatActivity {
 
                 benutzerDAO.insert(neuerBenutzer);
                 Toast.makeText(Registrieren.this, "Registrierung erfolgreich!", Toast.LENGTH_SHORT).show();
+
+                Intent intent = new Intent(Registrieren.this, StartUebersicht.class);
+                startActivity(intent);
+                finish();
 
             }
         });

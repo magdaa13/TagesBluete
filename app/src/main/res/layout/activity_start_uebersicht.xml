@@ -1,75 +1,79 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:padding="24dp"
-    tools:context=".StartUebersicht">
+    android:layout_height="match_parent"
+    android:padding="16dp">
 
-    <!-- Automatisch aktualisiertes Datum mit Wochentag -->
-
-
-    <!-- Button: Tagesplan -->
+    <TextView
+        android:paddingTop="20dp"
+        android:id="@+id/welcomeText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/willkommen"
+        android:textSize="40sp"
+        android:textStyle="bold"
+        android:textColor="@android:color/black"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <TextView
         android:id="@+id/dateText"
         android:layout_width="wrap_content"
-        android:layout_height="50sp"
-
-        android:layout_marginStart="368dp"
-        android:layout_marginTop="12dp"
-        android:textColor="@android:color/black"
-        android:textSize="50sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <Button
-        android:id="@+id/btnTagesplan"
-        android:layout_width="0dp"
-        android:layout_height="50sp"
-        android:layout_marginTop="396dp"
-        android:layout_marginEnd="8dp"
-        android:text="@string/tagesplan"
-        app:layout_constraintEnd_toStartOf="@id/imageOverview"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/dateText" />
-
-    <!-- Button: Mein Garten -->
-    <Button
-        android:id="@+id/btnMeinGarten"
-        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="8dp"
-        android:text="@string/mein_garten"
-        app:layout_constraintEnd_toStartOf="@id/imageOverview"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/btnTagesplan" />
+        android:text="Montag, 1.1.2025"
+        android:textSize="30sp"
+        app:layout_constraintTop_toBottomOf="@id/welcomeText"
+        android:layout_marginTop="4dp" />
 
-    <!-- Button: Notfallkontakte -->
-    <Button
-        android:id="@+id/btnNotfall"
+    <LinearLayout
+        android:paddingTop="350dp"
+        android:id="@+id/buttonColumn"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="8dp"
-        android:text="@string/notfallkontakt"
-        app:layout_constraintEnd_toStartOf="@id/imageOverview"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        android:gravity="start"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_gravity="bottom"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/btnMeinGarten" />
+        app:layout_constraintEnd_toStartOf="@id/baumImage"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="16dp">
 
-    <!-- Bild rechts -->
+        <Button
+            android:id="@+id/buttonTagesplan"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_marginBottom="16dp"
+            android:text="@string/tagesplan"
+            />
+
+        <Button
+            android:id="@+id/buttonMeinGarten"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:text="@string/mein_garten"
+            android:layout_marginBottom="16dp" />
+
+        <Button
+            android:id="@+id/buttonNotfallkontakte"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:text="@string/notfallkontakt"
+            />
+    </LinearLayout>
+
+
     <ImageView
-        android:id="@+id/imageOverview"
-        android:layout_width="164dp"
-        android:layout_height="250dp"
-        android:contentDescription="@string/TagesBlüte"
-        android:src="@drawable/ic_launcher_background"
-        app:layout_constraintBottom_toBottomOf="@id/btnNotfall"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/btnTagesplan" />
-
+        android:id="@+id/baumImage"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:srcCompat="@drawable/logo_icon"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@id/buttonColumn"
+        app:layout_constraintEnd_toEndOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

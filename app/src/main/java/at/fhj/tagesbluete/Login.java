@@ -1,6 +1,7 @@
 package at.fhj.tagesbluete;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
@@ -31,7 +32,6 @@ public class Login extends AppCompatActivity {
         //Zugriff auf DAO
         userDao = RoomDatenbank.getInstance(getApplicationContext()).userDao();
 
-
         loginBestätigen.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -43,12 +43,15 @@ public class Login extends AppCompatActivity {
 
                 if (benutzer != null) {
                     Toast.makeText(Login.this, "Login erfolgreich!", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(Login.this, StartUebersicht.class);
+                    startActivity(intent);
+                    finish();
                 } else {
                     Toast.makeText(Login.this, "Benutzername oder Passwort falsch", Toast.LENGTH_SHORT).show();
                 }
 
-            }
 
+            }
         });
     }
 }

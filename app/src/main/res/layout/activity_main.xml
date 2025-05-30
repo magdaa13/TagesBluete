@@ -9,22 +9,20 @@
     android:padding="24dp"
     tools:context=".MainActivity">
 
-    <!-- Login-Button -->
     <Button
         android:id="@+id/loginBestätigenButton"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="60dp"
         android:text="@string/login"
         app:layout_constraintBottom_toTopOf="@id/registerButton"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginBottom="16dp"/>
 
-    <!-- Registrieren-Button -->
     <Button
         android:id="@+id/registerButton"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="60dp"
         android:layout_marginBottom="132dp"
         android:text="@string/registrieren"
         app:layout_constraintBottom_toBottomOf="parent"
