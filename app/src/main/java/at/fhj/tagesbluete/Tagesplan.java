@@ -3,6 +3,8 @@ package at.fhj.tagesbluete;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -22,6 +24,7 @@ public class Tagesplan extends AppCompatActivity {
     public RoomDatenbank db;
     public RecyclerView recyclerView;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,7 +34,33 @@ public class Tagesplan extends AppCompatActivity {
         recyclerView = findViewById(R.id.recyclerViewAufgaben);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
+        Button buttonAufgabeLöschen = findViewById(R.id.buttonAufgabeLöschen);
+        Button buttonAufgabeBearbeiten = findViewById(R.id.buttonAufgabeBearbeiten);
         FloatingActionButton fab = findViewById(R.id.fabAddAufgabe);
+
+        buttonAufgabeLöschen.setOnClickListener(v -> {
+            Aufgabe ausgewählteAufgabe = adapter.getSelectedAufgabe();
+            if(ausgewählteAufgabe != null){
+                db.aufgabeDao().deleteById(ausgewählteAufgabe.id);
+                Toast.makeText(this, "Aufgabe gelöscht", Toast.LENGTH_SHORT).show();
+                ladeAufgabenFuerHeute();
+            } else {
+                Toast.makeText(this, "Bitte erst eine Aufgabe auswählen", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        buttonAufgabeBearbeiten.setOnClickListener(v -> {
+            Aufgabe ausgewählteAufgabe = adapter.getSelectedAufgabe();
+            if(ausgewählteAufgabe != null){
+                Intent intent = new Intent(this, NeueAufgaben.class);
+                intent.putExtra("aufgabe_id", ausgewählteAufgabe.id);  // ID der Aufgabe übergeben
+                startActivity(intent);
+            } else {
+                Toast.makeText(this, "Bitte erst eine Aufgabe auswählen", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -46,15 +75,16 @@ public class Tagesplan extends AppCompatActivity {
         ladeAufgabenFuerHeute();
     }
     private void ladeAufgabenFuerHeute(){
-        String heute = new SimpleDateFormat("dd.MM.yyyy",Locale.GERMAN).format(new Date());
+        String heute = new SimpleDateFormat("dd.MM.yyyy", Locale.GERMAN).format(new Date());
         aufgabenListe = db.aufgabeDao().getAufgabenFuerDatum(heute);
 
         if(adapter == null){
-            adapter = new AufgabeAdapter(aufgabenListe);
+            adapter = new AufgabeAdapter(aufgabenListe, (aufgabe, position) -> {
+
+            });
             recyclerView.setAdapter(adapter);
         }else{
             adapter.setAufgabeListe(aufgabenListe);
-            adapter.notifyDataSetChanged();
         }
     }
 }

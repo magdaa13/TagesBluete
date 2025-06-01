@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.room.Room;
 
 import java.util.Calendar;
 import java.util.Locale;
@@ -19,11 +20,16 @@ import java.util.Locale;
 
 public class NeueAufgaben extends AppCompatActivity {
 
+    int aufgabeID = -1;
+    public Aufgabe bearbeiteteAufgabe = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_neue_aufgaben);
+        RoomDatenbank db = RoomDatenbank.getInstance(getApplicationContext());
+
 
         EditText TextTitel = findViewById(R.id.editTextTitel);
         EditText TextDatum = findViewById(R.id.editTextDatum);
@@ -66,31 +72,53 @@ public class NeueAufgaben extends AppCompatActivity {
 
         });
 
-        buttonHinzufügen.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String titel = TextTitel.getText().toString().trim();
-                String datum = TextDatum.getText().toString().trim();
-                String uhrzeit = TextUhrzeit.getText().toString().trim();
-                String wiederholung = SpinnerWH.getSelectedItem().toString();
+        // Prüfen ob Bearbeitungsmodus
+        aufgabeID = getIntent().getIntExtra("aufgabe_id", -1);
+        if (aufgabeID != -1) {
+            bearbeiteteAufgabe = db.aufgabeDao().findById(aufgabeID);
+            if (bearbeiteteAufgabe != null) {
+                TextTitel.setText(bearbeiteteAufgabe.titel);
+                TextDatum.setText(bearbeiteteAufgabe.datum);
+                TextUhrzeit.setText(bearbeiteteAufgabe.uhrzeit);
+                int spinnerPosition = adapter.getPosition(bearbeiteteAufgabe.wiederholung);
+                SpinnerWH.setSelection(spinnerPosition);
+                buttonHinzufügen.setText("Änderung speichern");
+            }
+        }
 
-                if (titel.isEmpty() || datum.isEmpty() || uhrzeit.isEmpty()) {
-                    Toast.makeText(NeueAufgaben.this, "Bitte alle Felder ausfüllen", Toast.LENGTH_SHORT).show();
-                    return;
-                }
+        buttonHinzufügen.setOnClickListener(v -> {
+            String titel = TextTitel.getText().toString().trim();
+            String datum = TextDatum.getText().toString().trim();
+            String uhrzeit = TextUhrzeit.getText().toString().trim();
+            String wiederholung = SpinnerWH.getSelectedItem().toString();
+
+            if (titel.isEmpty() || datum.isEmpty() || uhrzeit.isEmpty()) {
+                Toast.makeText(NeueAufgaben.this, "Bitte alle Felder ausfüllen", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            if (aufgabeID != -1 && bearbeiteteAufgabe != null) {
+                // BEARBEITUNG
+                bearbeiteteAufgabe.titel = titel;
+                bearbeiteteAufgabe.datum = datum;
+                bearbeiteteAufgabe.uhrzeit = uhrzeit;
+                bearbeiteteAufgabe.wiederholung = wiederholung;
+
+                db.aufgabeDao().update(bearbeiteteAufgabe);
+                Toast.makeText(NeueAufgaben.this, "Aufgabe wurde aktualisiert!", Toast.LENGTH_SHORT).show();
+            } else {
+                // NEUANLAGE
                 Aufgabe neueAufgabe = new Aufgabe();
                 neueAufgabe.titel = titel;
                 neueAufgabe.datum = datum;
                 neueAufgabe.uhrzeit = uhrzeit;
                 neueAufgabe.wiederholung = wiederholung;
 
-                RoomDatenbank db = RoomDatenbank.getInstance(getApplicationContext());
                 db.aufgabeDao().insert(neueAufgabe);
-
-                Toast.makeText(NeueAufgaben.this, "Aufgabe wurde erfolgreich gespeichert!", Toast.LENGTH_SHORT).show();
-                finish();
+                Toast.makeText(NeueAufgaben.this, "Aufgabe wurde gespeichert!", Toast.LENGTH_SHORT).show();
             }
-        });
 
+            finish();
+        });
     }
 }
