@@ -15,5 +15,7 @@ public class Aufgabe {
     //Nutzerzuordnung
     public String nutzername;
 
+    public boolean erledigt; //Eine Aufgabe wurde erledigt
+
 
 }

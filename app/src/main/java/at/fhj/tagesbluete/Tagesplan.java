@@ -41,7 +41,7 @@ public class Tagesplan extends AppCompatActivity {
 
         buttonAufgabeLöschen.setOnClickListener(v -> {
             Aufgabe ausgewählteAufgabe = adapter.getSelectedAufgabe();
-            if(ausgewählteAufgabe != null){
+            if(ausgewählteAufgabe != null && ausgewählteAufgabe.erledigt){
                 db.aufgabeDao().deleteById(ausgewählteAufgabe.id);
                 Toast.makeText(this, "Aufgabe gelöscht", Toast.LENGTH_SHORT).show();
                 ladeAufgabenFuerHeute();
@@ -52,7 +52,7 @@ public class Tagesplan extends AppCompatActivity {
 
         buttonAufgabeBearbeiten.setOnClickListener(v -> {
             Aufgabe ausgewählteAufgabe = adapter.getSelectedAufgabe();
-            if(ausgewählteAufgabe != null){
+            if(ausgewählteAufgabe != null && ausgewählteAufgabe.erledigt){
                 Intent intent = new Intent(this, NeueAufgaben.class);
                 intent.putExtra("aufgabe_id", ausgewählteAufgabe.id);  // ID der Aufgabe übergeben
                 startActivity(intent);

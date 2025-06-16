@@ -30,9 +30,25 @@ public class AufgabenBenachrichtigung extends BroadcastReceiver {
             );
             manager.createNotificationChannel(channel);
         }
+        //Array mit zufälligen Titeln
+        String[] titelAlternativen = {
+                "Hallo! Wie geht es dir? \uD83C\uDF40",
+                "Hallo! Zeit für eine Aufgabe! \uD83D\uDD56",
+                "Kleine Taten schlagen große Vorsätze. \uD83D\uDCAA",
+                "Bereit für die nächste Aufgabe? \uD83C\uDF1F",
+                "Schön, dass du da bist!\uD83C\uDF3B",
+                "Bereit, etwas zu erreichen?\uD83C\uDF31",
+                "Kümmer dich gut um dich!\uD83C\uDF1F",
+                "Heute ist dein Tag!\uD83C\uDF1E"
+        };
+
+        //zufällig auswählen
+        int zufallsIndex = (int) (Math.random() * titelAlternativen.length);
+        String zufallsTitel = titelAlternativen[zufallsIndex];
+
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, channelId)
                 .setSmallIcon(R.drawable.ic_launcher_background)
-                .setContentTitle("Guten Tag! Wie geht es Ihnen?")
+                .setContentTitle(zufallsTitel)
                 .setContentText("Folgende Aufgabe ist nun fällig: " + titel)
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setContentIntent(pendingIntent)

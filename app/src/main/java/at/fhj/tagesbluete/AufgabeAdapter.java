@@ -3,7 +3,7 @@ package at.fhj.tagesbluete;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
+import android.widget.CheckBox;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -27,22 +27,36 @@ public class AufgabeAdapter extends RecyclerView.Adapter<AufgabeAdapter.AufgabeV
         this.aufgabeListe = neueAufgaben;
         notifyDataSetChanged();
     }
-    @NonNull
+
     @Override
     public AufgabeViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(android.R.layout.simple_list_item_2, parent, false);
+                .inflate(R.layout.aufgabe_item, parent, false);
         return new AufgabeViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull AufgabeViewHolder holder, int position) {
         Aufgabe aufgabe = aufgabeListe.get(position);
+
         holder.titelView.setText(aufgabe.titel);
-        holder.beschreibungView.setText(aufgabe.beschreibung);
+        holder.checkBox.setChecked(aufgabe.erledigt);
+
+        holder.checkBox.setOnCheckedChangeListener((buttonView, isChecked)-> {
+            aufgabe.erledigt = isChecked;
+
+            if(isChecked){
+                selectedPosition = holder.getAdapterPosition();
+            } else if(selectedPosition == holder.getAdapterPosition()){
+                selectedPosition = RecyclerView.NO_POSITION;
+            }
+
+            RoomDatenbank.getInstance(holder.itemView.getContext())
+                    .aufgabeDao()
+                    .update(aufgabe);
+        });
 
         holder.itemView.setSelected(selectedPosition == position);
-
         holder.itemView.setOnClickListener(v -> {
             notifyItemChanged(selectedPosition);
             selectedPosition = holder.getAdapterPosition();
@@ -68,11 +82,11 @@ public class AufgabeAdapter extends RecyclerView.Adapter<AufgabeAdapter.AufgabeV
 
     public static class AufgabeViewHolder extends RecyclerView.ViewHolder {
         TextView titelView;
-        TextView beschreibungView;
+        CheckBox checkBox;
 
         public AufgabeViewHolder(@NonNull View itemView) {
             super(itemView);
-            titelView = itemView.findViewById(android.R.id.text1);
-            beschreibungView = itemView.findViewById(android.R.id.text2);
+            titelView = itemView.findViewById(R.id.textViewTitel);
+            checkBox = itemView.findViewById(R.id.checkboxErledigt);
         }
 }}
