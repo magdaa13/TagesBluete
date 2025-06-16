@@ -13,10 +13,4 @@ public class Benutzer {
     public String passwort;
 
 
-    // Konstruktor
-    public Benutzer() {
-        this.benutzername = benutzername;
-        this.passwort = passwort;
-    }
-
 }

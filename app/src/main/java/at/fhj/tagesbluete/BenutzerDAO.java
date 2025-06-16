@@ -13,6 +13,7 @@ public interface BenutzerDAO {
     @Query("SELECT * FROM Benutzer WHERE benutzername = :benutzername AND passwort = :passwort LIMIT 1")
     Benutzer login(String benutzername, String passwort);
 
+
     @Query("SELECT * FROM Benutzer WHERE benutzername = :benutzername LIMIT 1")
     Benutzer findByUsername(String benutzername);
 

@@ -1,6 +1,7 @@
 package at.fhj.tagesbluete;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -76,7 +77,11 @@ public class Tagesplan extends AppCompatActivity {
     }
     private void ladeAufgabenFuerHeute(){
         String heute = new SimpleDateFormat("dd.MM.yyyy", Locale.GERMAN).format(new Date());
-        aufgabenListe = db.aufgabeDao().getAufgabenFuerDatum(heute);
+
+        SharedPreferences prefs = getSharedPreferences("TagesBluetePrefs", MODE_PRIVATE);
+        String nutzername = prefs.getString("nutzername", "");
+
+        aufgabenListe = db.aufgabeDao().getAufgabenFuerDatum(heute, nutzername);
 
         if(adapter == null){
             adapter = new AufgabeAdapter(aufgabenListe, (aufgabe, position) -> {

@@ -7,7 +7,7 @@ import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 
-@Database(entities = {Benutzer.class, Aufgabe.class}, version = 3)
+@Database(entities = {Benutzer.class, Aufgabe.class}, version = 1, exportSchema = false)
 public abstract class RoomDatenbank extends RoomDatabase {
 
     private static RoomDatenbank instance;

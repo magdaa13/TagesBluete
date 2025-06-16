@@ -15,11 +15,12 @@ public interface AufgabeDAO {
     @Update
     void update(Aufgabe aufgabe);
 
-    @Query("SELECT * FROM Aufgabe WHERE datum = :heutigesDatum ORDER BY uhrzeit ASC")
-    List<Aufgabe> getAufgabenFuerDatum(String heutigesDatum);
+    @Query("SELECT * FROM Aufgabe WHERE datum = :heutigesDatum AND nutzername = :nutzername ORDER BY uhrzeit ASC")
+    List<Aufgabe> getAufgabenFuerDatum(String heutigesDatum, String nutzername);
 
-    @Query("SELECT * FROM Aufgabe")
-    List<Aufgabe> getAlleAufgaben();
+
+    @Query("SELECT * FROM Aufgabe WHERE nutzername = :nutzername")
+    List<Aufgabe> getAlleAufgaben(String nutzername);
 
     @Query("DELETE FROM Aufgabe WHERE id = :id")
     void deleteById(int id);

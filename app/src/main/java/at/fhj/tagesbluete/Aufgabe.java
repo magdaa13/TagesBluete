@@ -12,5 +12,8 @@ public class Aufgabe {
     public String uhrzeit;
     public String wiederholung;
 
+    //Nutzerzuordnung
+    public String nutzername;
+
 
 }

@@ -2,6 +2,7 @@ package at.fhj.tagesbluete;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -29,6 +30,9 @@ public class NeueAufgaben extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_neue_aufgaben);
         RoomDatenbank db = RoomDatenbank.getInstance(getApplicationContext());
+
+        SharedPreferences prefs = getSharedPreferences("TagesBluetePrefs", MODE_PRIVATE);
+        String eingeloggterNutzername = prefs.getString("nutzername", "");  // Fallback: leerer String
 
 
         EditText TextTitel = findViewById(R.id.editTextTitel);
@@ -103,6 +107,7 @@ public class NeueAufgaben extends AppCompatActivity {
                 bearbeiteteAufgabe.datum = datum;
                 bearbeiteteAufgabe.uhrzeit = uhrzeit;
                 bearbeiteteAufgabe.wiederholung = wiederholung;
+                bearbeiteteAufgabe.nutzername = eingeloggterNutzername; //Nutzerzuordnung
 
                 db.aufgabeDao().update(bearbeiteteAufgabe);
                 Toast.makeText(NeueAufgaben.this, "Aufgabe wurde aktualisiert!", Toast.LENGTH_SHORT).show();
@@ -113,6 +118,7 @@ public class NeueAufgaben extends AppCompatActivity {
                 neueAufgabe.datum = datum;
                 neueAufgabe.uhrzeit = uhrzeit;
                 neueAufgabe.wiederholung = wiederholung;
+                neueAufgabe.nutzername = eingeloggterNutzername;
 
                 db.aufgabeDao().insert(neueAufgabe);
                 Toast.makeText(NeueAufgaben.this, "Aufgabe wurde gespeichert!", Toast.LENGTH_SHORT).show();
