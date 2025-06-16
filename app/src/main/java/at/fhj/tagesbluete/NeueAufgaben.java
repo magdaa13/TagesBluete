@@ -1,10 +1,14 @@
 package at.fhj.tagesbluete;
 
+import android.annotation.SuppressLint;
+import android.app.AlarmManager;
 import android.app.DatePickerDialog;
+import android.app.PendingIntent;
 import android.app.TimePickerDialog;
+import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -13,9 +17,10 @@ import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.room.Room;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Locale;
 
 
@@ -23,6 +28,7 @@ public class NeueAufgaben extends AppCompatActivity {
 
     int aufgabeID = -1;
     public Aufgabe bearbeiteteAufgabe = null;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -122,6 +128,44 @@ public class NeueAufgaben extends AppCompatActivity {
 
                 db.aufgabeDao().insert(neueAufgabe);
                 Toast.makeText(NeueAufgaben.this, "Aufgabe wurde gespeichert!", Toast.LENGTH_SHORT).show();
+            }
+
+            try {
+                String datumUhrzeit = datum + " " + uhrzeit;
+                SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.GERMAN);
+                Date date = sdf.parse(datumUhrzeit);
+                long triggerMillis = date.getTime();
+
+                Intent intent = new Intent(NeueAufgaben.this, AufgabenBenachrichtigung.class);
+                intent.putExtra("titel", titel);
+
+                PendingIntent pendingIntent = PendingIntent.getBroadcast(
+                        NeueAufgaben.this,
+                        (int) System.currentTimeMillis(),
+                        intent,
+                        PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
+                );
+
+                AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+                if (alarmManager != null) {
+                    switch(wiederholung){
+                        case "Einmalig":
+                            alarmManager.set(AlarmManager.RTC_WAKEUP, triggerMillis, pendingIntent);
+                            break;
+                        case "Täglich":
+                            alarmManager.setRepeating(
+                                    AlarmManager.RTC_WAKEUP,triggerMillis,AlarmManager.INTERVAL_DAY,pendingIntent);
+                            break;
+                        case "Wöchentlich":
+                            alarmManager.setRepeating(
+                                    AlarmManager.RTC_WAKEUP,triggerMillis,AlarmManager.INTERVAL_DAY * 7, pendingIntent
+                            );
+                            break;
+                    }
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
             }
 
             finish();
