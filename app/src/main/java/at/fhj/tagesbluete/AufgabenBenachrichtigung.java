@@ -47,7 +47,7 @@ public class AufgabenBenachrichtigung extends BroadcastReceiver {
         String zufallsTitel = titelAlternativen[zufallsIndex];
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, channelId)
-                .setSmallIcon(R.drawable.ic_launcher_background)
+                .setSmallIcon(R.drawable.logo_icon)
                 .setContentTitle(zufallsTitel)
                 .setContentText("Folgende Aufgabe ist nun fällig: " + titel)
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
