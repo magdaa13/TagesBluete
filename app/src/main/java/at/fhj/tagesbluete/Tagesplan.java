@@ -1,5 +1,8 @@
 package at.fhj.tagesbluete;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -40,24 +43,51 @@ public class Tagesplan extends AppCompatActivity {
         FloatingActionButton fab = findViewById(R.id.fabAddAufgabe);
 
         buttonAufgabeLöschen.setOnClickListener(v -> {
-            Aufgabe ausgewählteAufgabe = adapter.getSelectedAufgabe();
-            if(ausgewählteAufgabe != null && ausgewählteAufgabe.erledigt){
-                db.aufgabeDao().deleteById(ausgewählteAufgabe.id);
-                Toast.makeText(this, "Aufgabe gelöscht", Toast.LENGTH_SHORT).show();
-                ladeAufgabenFuerHeute();
-            } else {
+            List<Aufgabe> ausgewählteAufgaben = adapter.getSelectedAufgaben();
+
+            if (ausgewählteAufgaben.isEmpty()) {
                 Toast.makeText(this, "Bitte erst eine Aufgabe auswählen", Toast.LENGTH_SHORT).show();
+                return;
             }
+
+            for (Aufgabe aufgabe : ausgewählteAufgaben) {
+                Intent intent = new Intent(this, AufgabenBenachrichtigung.class);
+                PendingIntent pendingIntent = PendingIntent.getBroadcast(
+                        this,
+                        aufgabe.id,
+                        intent,
+                        PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
+                );
+
+            AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+            if (alarmManager != null) {
+                alarmManager.cancel(pendingIntent); //
+            }
+
+            db.aufgabeDao().deleteById(aufgabe.id);
+}
+            Toast.makeText(this, "Aufgabe gelöscht!", Toast.LENGTH_SHORT).show();
+
+            adapter.clearSelection();
+            ladeAufgabenFuerHeute();
         });
 
         buttonAufgabeBearbeiten.setOnClickListener(v -> {
-            Aufgabe ausgewählteAufgabe = adapter.getSelectedAufgabe();
-            if(ausgewählteAufgabe != null && ausgewählteAufgabe.erledigt){
-                Intent intent = new Intent(this, NeueAufgaben.class);
-                intent.putExtra("aufgabe_id", ausgewählteAufgabe.id);  // ID der Aufgabe übergeben
-                startActivity(intent);
-            } else {
+            List<Aufgabe> ausgewählteAufgaben = adapter.getSelectedAufgaben();
+
+            if (ausgewählteAufgaben.isEmpty()) {
                 Toast.makeText(this, "Bitte erst eine Aufgabe auswählen", Toast.LENGTH_SHORT).show();
+            } else if (ausgewählteAufgaben.size() > 1) {
+                Toast.makeText(this, "Sie können jeweils nur eine Aufgabe bearbeiten, bitte nur eine auswählen!", Toast.LENGTH_SHORT).show();
+            } else {
+                Aufgabe ausgewählteAufgabe = ausgewählteAufgaben.get(0);
+                if (ausgewählteAufgabe.erledigt) {
+                    Intent intent = new Intent(this, NeueAufgaben.class);
+                    intent.putExtra("aufgabe_id", ausgewählteAufgabe.id);
+                    startActivity(intent);
+                } else {
+                    Toast.makeText(this, "Aufgabe ist noch nicht erledigt", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 

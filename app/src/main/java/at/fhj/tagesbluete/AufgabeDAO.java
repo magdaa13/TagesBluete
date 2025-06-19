@@ -10,7 +10,7 @@ import java.util.List;
 @Dao
 public interface AufgabeDAO {
     @Insert
-    void insert(Aufgabe aufgabe);
+    long insert(Aufgabe aufgabe);
 
     @Update
     void update(Aufgabe aufgabe);

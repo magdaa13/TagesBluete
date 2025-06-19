@@ -107,6 +107,7 @@ public class NeueAufgaben extends AppCompatActivity {
                 return;
             }
 
+            Aufgabe aktuelleAufgabe;
             if (aufgabeID != -1 && bearbeiteteAufgabe != null) {
                 // BEARBEITUNG
                 bearbeiteteAufgabe.titel = titel;
@@ -116,9 +117,10 @@ public class NeueAufgaben extends AppCompatActivity {
                 bearbeiteteAufgabe.nutzername = eingeloggterNutzername; //Nutzerzuordnung
 
                 db.aufgabeDao().update(bearbeiteteAufgabe);
+                aktuelleAufgabe = bearbeiteteAufgabe;
                 Toast.makeText(NeueAufgaben.this, "Aufgabe wurde aktualisiert!", Toast.LENGTH_SHORT).show();
             } else {
-                // NEUANLAGE
+                // Neu anlegen
                 Aufgabe neueAufgabe = new Aufgabe();
                 neueAufgabe.titel = titel;
                 neueAufgabe.datum = datum;
@@ -126,7 +128,9 @@ public class NeueAufgaben extends AppCompatActivity {
                 neueAufgabe.wiederholung = wiederholung;
                 neueAufgabe.nutzername = eingeloggterNutzername;
 
-                db.aufgabeDao().insert(neueAufgabe);
+               long neueId = db.aufgabeDao().insert(neueAufgabe);
+               neueAufgabe.id = (int)neueId;
+               aktuelleAufgabe = neueAufgabe;
                 Toast.makeText(NeueAufgaben.this, "Aufgabe wurde gespeichert!", Toast.LENGTH_SHORT).show();
             }
 
@@ -141,7 +145,7 @@ public class NeueAufgaben extends AppCompatActivity {
 
                 PendingIntent pendingIntent = PendingIntent.getBroadcast(
                         NeueAufgaben.this,
-                        (int) System.currentTimeMillis(),
+                        aktuelleAufgabe.id,
                         intent,
                         PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
                 );

@@ -9,11 +9,14 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class AufgabeAdapter extends RecyclerView.Adapter<AufgabeAdapter.AufgabeViewHolder> {
     public List<Aufgabe> aufgabeListe;
-    public int selectedPosition = RecyclerView.NO_POSITION;
+    public Set<Integer> selectedPosition = new HashSet<>();
     private OnItemClickListener listener;
     public interface OnItemClickListener {
         void onItemClick(Aufgabe aufgabe, int position);
@@ -40,15 +43,16 @@ public class AufgabeAdapter extends RecyclerView.Adapter<AufgabeAdapter.AufgabeV
         Aufgabe aufgabe = aufgabeListe.get(position);
 
         holder.titelView.setText(aufgabe.titel);
-        holder.checkBox.setChecked(aufgabe.erledigt);
+        holder.checkBox.setOnCheckedChangeListener(null);
+        holder.checkBox.setChecked(selectedPosition.contains(position));
 
         holder.checkBox.setOnCheckedChangeListener((buttonView, isChecked)-> {
             aufgabe.erledigt = isChecked;
 
             if(isChecked){
-                selectedPosition = holder.getAdapterPosition();
-            } else if(selectedPosition == holder.getAdapterPosition()){
-                selectedPosition = RecyclerView.NO_POSITION;
+                selectedPosition.add(position);
+            } else {
+                selectedPosition.remove(position);
             }
 
             RoomDatenbank.getInstance(holder.itemView.getContext())
@@ -56,14 +60,20 @@ public class AufgabeAdapter extends RecyclerView.Adapter<AufgabeAdapter.AufgabeV
                     .update(aufgabe);
         });
 
-        holder.itemView.setSelected(selectedPosition == position);
+        holder.itemView.setSelected(selectedPosition.contains(position));
         holder.itemView.setOnClickListener(v -> {
-            notifyItemChanged(selectedPosition);
-            selectedPosition = holder.getAdapterPosition();
-            notifyItemChanged(selectedPosition);
+            boolean currentlySelected = selectedPosition.contains(position);
+            if(currentlySelected){
+                selectedPosition.remove(position);
+                holder.checkBox.setChecked(false);
+            } else {
+                selectedPosition.add(position);
+                holder.checkBox.setChecked(true);
+            }
+            notifyItemChanged(position);
 
             if(listener != null){
-                listener.onItemClick(aufgabe, selectedPosition);
+                listener.onItemClick(aufgabe, position);
             }
         });
     }
@@ -73,11 +83,21 @@ public class AufgabeAdapter extends RecyclerView.Adapter<AufgabeAdapter.AufgabeV
         return aufgabeListe.size();
     }
 
-    public Aufgabe getSelectedAufgabe(){
-        if(selectedPosition != RecyclerView.NO_POSITION){
-            return aufgabeListe.get(selectedPosition);
+    //für Mehrfachauswahl
+    public List<Aufgabe> getSelectedAufgaben(){
+        List<Aufgabe> ausgewählte = new ArrayList<>();
+        for(Integer pos : selectedPosition){
+            if(pos < aufgabeListe.size()){
+                ausgewählte.add(aufgabeListe.get(pos));
+            }
         }
-        return null;
+        return ausgewählte;
+    }
+    //Für Einzelauswahl
+
+    public void clearSelection(){
+        selectedPosition.clear();
+        notifyDataSetChanged();
     }
 
     public static class AufgabeViewHolder extends RecyclerView.ViewHolder {
