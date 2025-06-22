@@ -15,6 +15,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -85,20 +87,14 @@ public class Tagesplan extends AppCompatActivity {
                     Intent intent = new Intent(this, NeueAufgaben.class);
                     intent.putExtra("aufgabe_id", ausgewählteAufgabe.id);
                     startActivity(intent);
-                } else {
-                    Toast.makeText(this, "Aufgabe ist noch nicht erledigt", Toast.LENGTH_SHORT).show();
                 }
             }
         });
 
 
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(Tagesplan.this, NeueAufgaben.class));
-            }
-        });
+        fab.setOnClickListener(view -> startActivity(new Intent(Tagesplan.this, NeueAufgaben.class)));
         db = RoomDatenbank.getInstance(this);
+        ladeAufgabenFuerHeute();
     }
     @Override
     protected void onResume() {
@@ -111,15 +107,56 @@ public class Tagesplan extends AppCompatActivity {
         SharedPreferences prefs = getSharedPreferences("TagesBluetePrefs", MODE_PRIVATE);
         String nutzername = prefs.getString("nutzername", "");
 
-        aufgabenListe = db.aufgabeDao().getAufgabenFuerDatum(heute, nutzername);
+        List<Aufgabe> alleAufgaben = db.aufgabeDao().getAufgabenFuerDatum(heute, nutzername);
+
+        List<Aufgabe> heutigeAufgaben = filterAufgabenFürHeute(alleAufgaben);
 
         if(adapter == null){
-            adapter = new AufgabeAdapter(aufgabenListe, (aufgabe, position) -> {
+            adapter = new AufgabeAdapter(heutigeAufgaben, (aufgabe, position) -> {
 
             });
             recyclerView.setAdapter(adapter);
         }else{
-            adapter.setAufgabeListe(aufgabenListe);
+            adapter.setAufgabeListe(heutigeAufgaben);
         }
+    }
+
+    public List<Aufgabe>filterAufgabenFürHeute(List<Aufgabe> alleAufgaben){
+        List<Aufgabe>result = new ArrayList<>();
+
+        SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy", Locale.GERMAN);
+        Date heute = new Date();
+        Calendar heuteCal = Calendar.getInstance();
+        heuteCal.setTime(heute);
+        int heuteWochentag = heuteCal.get(Calendar.DAY_OF_WEEK); // 1=Sonntag ... 7=Samstag
+
+        for (Aufgabe a : alleAufgaben) {
+            try {
+                Date aufgabenDatum = sdf.parse(a.datum);  // a.datum als String in deinem Modell
+
+                if ("täglich".equals(a.wiederholung)) {
+                    // Immer hinzufügen
+                    result.add(a);
+                } else if ("wöchentlich".equals(a.wiederholung)) {
+                    if (aufgabenDatum != null) {
+                        Calendar aufgabenCal = Calendar.getInstance();
+                        aufgabenCal.setTime(aufgabenDatum);
+                        int aufgabenWochentag = aufgabenCal.get(Calendar.DAY_OF_WEEK);
+
+                        if (aufgabenWochentag == heuteWochentag) {
+                            result.add(a);
+                        }
+                    }
+                } else {
+                    // Keine Wiederholung, exaktes Datum
+                    if (aufgabenDatum != null && sdf.format(aufgabenDatum).equals(sdf.format(heute))) {
+                        result.add(a);
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return result;
     }
 }

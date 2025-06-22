@@ -93,7 +93,6 @@ public class AufgabeAdapter extends RecyclerView.Adapter<AufgabeAdapter.AufgabeV
         }
         return ausgewählte;
     }
-    //Für Einzelauswahl
 
     public void clearSelection(){
         selectedPosition.clear();

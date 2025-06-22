@@ -27,4 +27,5 @@ public interface AufgabeDAO {
 
     @Query("SELECT * FROM Aufgabe WHERE id = :aufgabeID LIMIT 1")
     Aufgabe findById(int aufgabeID);
+
 }

@@ -1,12 +1,8 @@
 package at.fhj.tagesbluete;
 
-import android.annotation.SuppressLint;
-import android.app.AlarmManager;
+
 import android.app.DatePickerDialog;
-import android.app.PendingIntent;
 import android.app.TimePickerDialog;
-import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.ArrayAdapter;
@@ -17,11 +13,17 @@ import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.work.Data;
+import androidx.work.ExistingPeriodicWorkPolicy;
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.PeriodicWorkRequest;
+import androidx.work.WorkManager;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 
 
 public class NeueAufgaben extends AppCompatActivity {
@@ -140,32 +142,43 @@ public class NeueAufgaben extends AppCompatActivity {
                 Date date = sdf.parse(datumUhrzeit);
                 long triggerMillis = date.getTime();
 
-                Intent intent = new Intent(NeueAufgaben.this, AufgabenBenachrichtigung.class);
-                intent.putExtra("titel", titel);
+                WorkManager workManager = WorkManager.getInstance(getApplicationContext());
 
-                PendingIntent pendingIntent = PendingIntent.getBroadcast(
-                        NeueAufgaben.this,
-                        aktuelleAufgabe.id,
-                        intent,
-                        PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
-                );
+                Data inputData = new Data.Builder()
+                        .putString("titel", titel)
+                        .putInt("id", aktuelleAufgabe.id)
+                        .build();
 
-                AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-                if (alarmManager != null) {
-                    switch(wiederholung){
-                        case "Einmalig":
-                            alarmManager.set(AlarmManager.RTC_WAKEUP, triggerMillis, pendingIntent);
-                            break;
-                        case "Täglich":
-                            alarmManager.setRepeating(
-                                    AlarmManager.RTC_WAKEUP,triggerMillis,AlarmManager.INTERVAL_DAY,pendingIntent);
-                            break;
-                        case "Wöchentlich":
-                            alarmManager.setRepeating(
-                                    AlarmManager.RTC_WAKEUP,triggerMillis,AlarmManager.INTERVAL_DAY * 7, pendingIntent
-                            );
-                            break;
+                long now = System.currentTimeMillis();
+                long delay = triggerMillis - now;
+                if(delay < 0) delay = 0;
+
+                if(wiederholung.equals("Einmalig")){
+                    OneTimeWorkRequest workRequest = new OneTimeWorkRequest.Builder(AufgabenBenachrichtigung.class)
+                            .setInitialDelay(delay, TimeUnit.MILLISECONDS)
+                            .setInputData(inputData)
+                            .build();
+
+                    workManager.enqueue(workRequest);
+                }else{
+                    long interval;
+                    if(wiederholung.equals("Täglich")){
+                        interval = TimeUnit.DAYS.toMillis(1);
+                    }else{
+                        interval =TimeUnit.DAYS.toMillis(7);
                     }
+
+                    PeriodicWorkRequest periodicWorkRequest = new PeriodicWorkRequest.Builder(
+                            AufgabenBenachrichtigung.class,
+                            interval,
+                            TimeUnit.MILLISECONDS)
+                            .setInputData(inputData)
+                            .build();
+
+                    String uniqueWorkName = "aufgabe_" + aktuelleAufgabe.id;
+
+                    workManager.enqueueUniquePeriodicWork(uniqueWorkName, ExistingPeriodicWorkPolicy.REPLACE,periodicWorkRequest
+                    );
                 }
 
             } catch (Exception e) {
