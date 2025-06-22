@@ -21,9 +21,10 @@
     <string name="uhrzeit">Uhrzeit</string>
     <string name="datum">Datum</string>
     <string name="titel">Titel der neuen Aufgabe\n</string>
-    <string name="neue_aufgabe_hinzufuegen">Neue Aufgabe hinzufügen</string>
+    <string name="neue_aufgabe_hinzufuegen">Neue Aufgabe</string>
     <string name="buttonAufgabeBearbeiten">Aufgabe bearbeiten</string>
     <string name="buttonAufgabeLöschen">Aufgabe löschen</string>
+    <string name="erledigt">Erledigt</string>
     <string-array name="wiederholungsoption"><item>Einmalig</item><item>Täglich</item><item>Wöchentlich</item>
     </string-array>
 </resources>

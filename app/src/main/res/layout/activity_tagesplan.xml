@@ -1,10 +1,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="24dp">
 
-    <!-- Überschrift -->
     <TextView
         android:id="@+id/textTagesplan"
         android:layout_width="wrap_content"
@@ -14,7 +12,6 @@
         android:textSize="40sp"
         android:textStyle="bold" />
 
-    <!-- Unterüberschrift -->
     <TextView
         android:id="@+id/textHeutigeAufgaben"
         android:layout_width="wrap_content"
@@ -24,54 +21,74 @@
         android:text="@string/heutige_aufgaben"
         android:textSize="25sp" />
 
-    <!-- RecyclerView -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewAufgaben"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_below="@id/textHeutigeAufgaben"
-        android:layout_above="@id/buttonContainer"
+        android:layout_above="@id/buttonGrid"
         android:layout_marginTop="12dp" />
 
     <LinearLayout
-        android:id="@+id/buttonContainer"
+        android:id="@+id/buttonGrid"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:orientation="horizontal"
+        android:orientation="vertical"
         android:gravity="center"
-        android:weightSum="3"
         android:layout_marginBottom="16dp">
 
-        <Button
-            android:id="@+id/buttonAufgabeBearbeiten"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1.6"
-            android:text="@string/buttonAufgabeBearbeiten"
-            android:textColor="@android:color/white"
-            android:layout_marginEnd="4dp" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:orientation="horizontal"
+            android:weightSum="2"
+            android:layout_marginBottom="8dp">
 
-        <Button
-            android:id="@+id/buttonAufgabeLöschen"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1.5"
-            android:text="@string/buttonAufgabeLöschen"
-            android:layout_marginStart="4dp"
-            android:layout_marginEnd="4dp" />
+            <Button
+                android:id="@+id/buttonAufgabeBearbeiten"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:backgroundTint="@color/petrolDunkel"
+                android:text="@string/buttonAufgabeBearbeiten"
+                android:textColor="@android:color/white" />
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/fabAddAufgabe"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginStart="4dp"
-            android:layout_marginEnd="4dp"
-            android:clickable="true"
-            app:srcCompat="@android:drawable/ic_input_add"
-            android:contentDescription="@string/neue_aufgabe_hinzufuegen" />
+            <Button
+                android:id="@+id/buttonAufgabeLöschen"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:backgroundTint="@color/petrolDunkel"
+                android:text="@string/buttonAufgabeLöschen"
+                android:textColor="@android:color/white" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:orientation="horizontal"
+            android:weightSum="2">
+
+            <Button
+                android:id="@+id/buttonAufgabeErledigen"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:backgroundTint="@color/petrolMittel"
+                android:text="@string/erledigt"
+                android:textColor="@android:color/white" />
+
+            <Button
+                android:id="@+id/buttonNeueAufgabe"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:backgroundTint="@color/petrolMittel"
+                android:drawablePadding="8dp"
+                android:text="@string/neue_aufgabe_hinzufuegen"
+                android:textColor="@android:color/white" />
+        </LinearLayout>
     </LinearLayout>
-
 </RelativeLayout>
 

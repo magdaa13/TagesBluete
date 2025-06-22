@@ -1,5 +1,7 @@
 package at.fhj.tagesbluete;
 
+import android.content.Context;
+import android.graphics.Paint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,15 +16,17 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+
 public class AufgabeAdapter extends RecyclerView.Adapter<AufgabeAdapter.AufgabeViewHolder> {
     public List<Aufgabe> aufgabeListe;
     public Set<Integer> selectedPosition = new HashSet<>();
     private OnItemClickListener listener;
+    public Context context;
     public interface OnItemClickListener {
         void onItemClick(Aufgabe aufgabe, int position);
     }
-
-    public AufgabeAdapter(List<Aufgabe> aufgabeListe, OnItemClickListener listener){
+    public AufgabeAdapter(Context context, List<Aufgabe> aufgabeListe, OnItemClickListener listener){
+        this.context = context;
         this.aufgabeListe = aufgabeListe;
         this.listener = listener;
     }
@@ -30,7 +34,7 @@ public class AufgabeAdapter extends RecyclerView.Adapter<AufgabeAdapter.AufgabeV
         this.aufgabeListe = neueAufgaben;
         notifyDataSetChanged();
     }
-
+    @NonNull
     @Override
     public AufgabeViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
@@ -43,12 +47,19 @@ public class AufgabeAdapter extends RecyclerView.Adapter<AufgabeAdapter.AufgabeV
         Aufgabe aufgabe = aufgabeListe.get(position);
 
         holder.titelView.setText(aufgabe.titel);
+
+        if(aufgabe.erledigt){
+            holder.titelView.setPaintFlags(holder.titelView.getPaintFlags()| Paint.STRIKE_THRU_TEXT_FLAG);
+            holder.titelView.setAlpha(0.5f);
+        } else{
+            holder.titelView.setPaintFlags(holder.titelView.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
+            holder.titelView.setAlpha(1f);
+        }
+
         holder.checkBox.setOnCheckedChangeListener(null);
         holder.checkBox.setChecked(selectedPosition.contains(position));
 
         holder.checkBox.setOnCheckedChangeListener((buttonView, isChecked)-> {
-            aufgabe.erledigt = isChecked;
-
             if(isChecked){
                 selectedPosition.add(position);
             } else {
@@ -57,10 +68,9 @@ public class AufgabeAdapter extends RecyclerView.Adapter<AufgabeAdapter.AufgabeV
 
             RoomDatenbank.getInstance(holder.itemView.getContext())
                     .aufgabeDao()
-                    .update(aufgabe);
+                    .updateAll(aufgabe);
         });
 
-        holder.itemView.setSelected(selectedPosition.contains(position));
         holder.itemView.setOnClickListener(v -> {
             boolean currentlySelected = selectedPosition.contains(position);
             if(currentlySelected){
@@ -76,6 +86,16 @@ public class AufgabeAdapter extends RecyclerView.Adapter<AufgabeAdapter.AufgabeV
                 listener.onItemClick(aufgabe, position);
             }
         });
+    }
+
+    public void markiereAusgewählteAlsErledigt(){
+        for(Integer pos : selectedPosition){
+            Aufgabe aufgabe = aufgabeListe.get(pos);
+            aufgabe.erledigt = true;
+
+            RoomDatenbank.getInstance(context).aufgabeDao().updateAll(aufgabe);
+        }
+        clearSelection();
     }
 
     @Override
