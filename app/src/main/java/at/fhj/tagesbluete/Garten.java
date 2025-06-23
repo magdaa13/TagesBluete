@@ -4,6 +4,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -15,10 +16,16 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import java.util.List;
+import java.util.Random;
+
 
 public class Garten extends AppCompatActivity {
 
-    public LinearLayout pflanzenContainer;
+    public FrameLayout gartenHintergrund;
+    public int pflanzenAbstand = 150;
+    public int pflanzengroesse = 200;
+    public int abstandVomRand = 50;
+    public int pflanzenProErledigte = 10;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,54 +33,49 @@ public class Garten extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_garten);
 
-       pflanzenContainer = findViewById(R.id.pflanzenContainer);
+        gartenHintergrund = findViewById(R.id.gartenHintergrund);
 
         SharedPreferences prefs = getSharedPreferences("TagesBluetePrefs", MODE_PRIVATE);
-        String nutzername = prefs.getString("nutzername","");
+        int erledigte = prefs.getInt("erledigte_gesamt", 0);
 
-        PflanzeDAO pflanzeDAO = RoomDatenbank.getInstance(this).pflanzeDAO();
-        List<Pflanzen> pflanzen = pflanzeDAO.getAllePflanzen(nutzername);
-        zeigePflanzen(pflanzen);
-    }
 
-    public void zeigePflanzen(List<Pflanzen>pflanzen){
-        pflanzenContainer.removeAllViews();
+        int pflanzenAnzahl = erledigte / 10;
 
-        LayoutInflater inflater = LayoutInflater.from(this);
-
-        for(Pflanzen p : pflanzen){
-            View pflanzenView = inflater.inflate(R.layout.item_pflanze,pflanzenContainer,false);
-
-            ImageView image = pflanzenView.findViewById(R.id.imagePflanze);
-            TextView art = pflanzenView.findViewById(R.id.textArt);
-            TextView level = pflanzenView.findViewById(R.id.textLevel);
-
-            int resid = getResources().getIdentifier(p.art + "_level" + p.level, "drawable", getPackageName());
-            image.setImageResource(resid);
-
-            String artName = Character.toUpperCase(p.art.charAt(0)) + p.art.substring(1);
-            art.setText(artName);
-
-            level.setText("Stufe "+ p.level + " von 2");
-
-            pflanzenContainer.addView(pflanzenView);
+        for (int i = 0; i < pflanzenAnzahl; i++) {
+            fügePflanzeHinzu();
         }
     }
-    @Override
-    protected void onResume(){
-        super.onResume();
-        aktualisierePflanzenAnzeige();
+
+
+    private void fügePflanzeHinzu() {
+        ImageView pflanze = new ImageView(this);
+        pflanze.setImageResource(R.drawable.crocus1);
+
+        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(pflanzengroesse, pflanzengroesse);
+
+        int x = generiereZufälligeX();
+        int y = generiereZufälligeY();
+
+        params.leftMargin = x;
+        params.topMargin = y;
+
+        pflanze.setLayoutParams(params);
+        gartenHintergrund.addView(pflanze);
     }
 
-    public void aktualisierePflanzenAnzeige(){
+    public int generiereZufälligeX() {
+        int breite = getResources().getDisplayMetrics().widthPixels;
+        return abstandVomRand + new Random().nextInt(Math.max(1, breite - pflanzengroesse - abstandVomRand));
+    }
 
-            SharedPreferences prefs = getSharedPreferences("TagesBluetePrefs", MODE_PRIVATE);
-            String nutzername = prefs.getString("nutzername", "");
-
-            PflanzeDAO pflanzeDAO = RoomDatenbank.getInstance(this).pflanzeDAO();
-            List<Pflanzen> pflanzen = pflanzeDAO.getAllePflanzen(nutzername);
-            zeigePflanzen(pflanzen);
+    public int generiereZufälligeY() {
+        int höhe = getResources().getDisplayMetrics().heightPixels;
+        return abstandVomRand + new Random().nextInt(Math.max(1, höhe - pflanzengroesse - abstandVomRand - 200));
+    }
 
     }
 
-}
+
+
+
+
