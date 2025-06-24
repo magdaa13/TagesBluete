@@ -2,8 +2,15 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="dunklesSchiefergrau">#8FBC8F</color>
     <color name="petrolDunkel">#14574B</color>
     <color name="petrolHell">#86B4A8</color>
     <color name="petrolMittel">#508478</color>
+    <color name="wieseGrün">#35682d</color>
+    <color name="wieseGrünHell">#9ACD32</color>
+    <color name="waldGrün">#228B22</color>
+    <color name="HellGrau">#D3D3D3</color>
+
+
 
 </resources>

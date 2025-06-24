@@ -2,7 +2,6 @@ package at.fhj.tagesbluete;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -33,7 +32,7 @@ public class StartUebersicht extends AppCompatActivity {
 
         Button buttonNotfallkontakt = findViewById(R.id.buttonNotfallkontakte);
         buttonNotfallkontakt.setOnClickListener(v -> {
-            startActivity(new Intent(StartUebersicht.this, NotfallkontaktVerwalten.class));
+            startActivity(new Intent(StartUebersicht.this, Notfallkontakt.class));
         });
 
 

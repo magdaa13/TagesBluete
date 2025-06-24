@@ -1,5 +1,10 @@
 package at.fhj.tagesbluete;
 
+import android.annotation.SuppressLint;
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -7,10 +12,13 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.os.Build;
 import android.os.IBinder;
 import android.os.Looper;
 import android.os.Handler;
 import android.widget.Toast;
+
+import androidx.core.app.NotificationCompat;
 
 import java.util.logging.LogRecord;
 
@@ -20,13 +28,17 @@ public class SensorService extends Service implements SensorEventListener {
     public Sensor accelerometer;
     public Sensor motionSensor;
 
-    public long lastMovementTime = 0;
+    public long lastMovementTime = System.currentTimeMillis();
     public static final long INACTIVITY_THRESHOLD = 1000 * 60 * 30;
     public Handler handler;
+    public String CHANNEL_ID = "SturzerkennungsServiceChannel";
 
+    @SuppressLint("ForegroundServiceType")
     @Override
     public void onCreate() {
         super.onCreate();
+        createNotificationChannel();
+        startForeground(1,buildForegroundNotification());
         handler = new Handler(Looper.getMainLooper()) {
         };
 
@@ -47,6 +59,12 @@ public class SensorService extends Service implements SensorEventListener {
     }
 
     @Override
+    public void onDestroy(){
+        super.onDestroy();
+        sensorManager.unregisterListener(this);
+    }
+
+    @Override
     public void onSensorChanged(SensorEvent event) {
         if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
             detectFall(event);
@@ -61,7 +79,7 @@ public class SensorService extends Service implements SensorEventListener {
         float z = event.values[2];
         double acceleration = Math.sqrt(x*x + y*y + z*z);
 
-        if (acceleration > 25) { // Schwelle anpassen
+        if (acceleration > 25) { // Schwelle
             triggerFallDetected();
         }
     }
@@ -79,10 +97,7 @@ public class SensorService extends Service implements SensorEventListener {
     }
 
     @Override public void onAccuracyChanged(Sensor sensor, int accuracy) {}
-    @Override public void onDestroy() {
-        sensorManager.unregisterListener(this);
-        super.onDestroy();
-    }
+
 
     private void triggerFallDetected() {
         new Handler(Looper.getMainLooper()).post(() -> {
@@ -97,6 +112,37 @@ public class SensorService extends Service implements SensorEventListener {
             Toast.makeText(getApplicationContext(), "Bewegungserinnerung: Bitte machen Sie einen kurzen Spaziergang.", Toast.LENGTH_LONG).show();
         });
     }
+
+    public void createNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel serviceChannel = new NotificationChannel(
+                    CHANNEL_ID,
+                    "Sturzerkennung Hintergrunddienst",
+                    NotificationManager.IMPORTANCE_LOW
+            );
+
+            NotificationManager manager = getSystemService(NotificationManager.class);
+            if (manager != null) {
+                manager.createNotificationChannel(serviceChannel);
+            }
+        }
+    }
+    public Notification buildForegroundNotification() {
+        Intent notificationIntent = new Intent(this, MainActivity.class);
+        PendingIntent pendingIntent = PendingIntent.getActivity(
+                this, 0, notificationIntent,
+                PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT
+        );
+
+        return new NotificationCompat.Builder(this, CHANNEL_ID)
+                .setContentTitle("Sturzerkennung aktiv")
+                .setContentText("Die App überwacht Bewegungen im Hintergrund.")
+                .setSmallIcon(R.drawable.warning)
+                .setContentIntent(pendingIntent)
+                .setOngoing(true)
+                .build();
+    }
+
 
     @Override
     public IBinder onBind(Intent intent) {

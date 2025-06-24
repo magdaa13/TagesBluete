@@ -5,6 +5,7 @@ import androidx.annotation.NonNull;
 
 import android.Manifest;
 
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
@@ -16,9 +17,6 @@ import android.widget.Toast;
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 import android.os.Handler;
 
@@ -27,22 +25,17 @@ public class Sturzerkennung extends AppCompatActivity {
     public Handler handler = new Handler();
     public Runnable sendAlertRunnable;
     public static final int PERMISSION_REQUEST_CODE = 100;
+    public static final int ABORT_WINDOW_MILLIS = 30000;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_sturzerkennung);
 
         sendAlertRunnable = this::sendEmergencySMS;
 
-        if (!hasPermissions()) {
-            requestPermissions();
-        } else {
-            startCountdown();
-        }
         Button cancelButton = findViewById(R.id.cancelButton);
         cancelButton.setOnClickListener(v -> {
             handler.removeCallbacks(sendAlertRunnable);
@@ -50,6 +43,11 @@ public class Sturzerkennung extends AppCompatActivity {
             finish();
         });
 
+        if (!hasPermissions()) {
+            requestPermissions();
+        } else {
+            startCountdown();
+        }
     }
 
     private boolean hasPermissions() {
@@ -65,7 +63,7 @@ public class Sturzerkennung extends AppCompatActivity {
     }
 
     private void startCountdown() {
-        handler.postDelayed(sendAlertRunnable, 10000); // 10 Sekunden Zeit zum Abbrechen
+        handler.postDelayed(sendAlertRunnable, ABORT_WINDOW_MILLIS); // 30 Sekunden Zeit zum Abbrechen
     }
 
     @Override
@@ -76,7 +74,7 @@ public class Sturzerkennung extends AppCompatActivity {
             if (hasPermissions()) {
                 startCountdown();
             } else {
-                Toast.makeText(this, "Berechtigungen benötigt, um Notfall-SMS zu senden", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "Berechtigungen fehlen - SMS kann nicht gesendet werden.", Toast.LENGTH_LONG).show();
                 finish();
             }
         }
@@ -84,6 +82,23 @@ public class Sturzerkennung extends AppCompatActivity {
 
     @SuppressLint("MissingPermission")
     private void sendEmergencySMS() {
+
+        SharedPreferences prefs = getSharedPreferences("NotfallPrefs", MODE_PRIVATE);
+
+        String vorname = prefs.getString("vorname", "");
+        String nachname = prefs.getString("nachname", "");
+        String verhaeltnis = prefs.getString("verhaeltnis", "");
+        String nummer = prefs.getString("nummer", "");
+
+        if (nummer == null || nummer.isEmpty()) {
+            Toast.makeText(this, "Keine Notfallnummer hinterlegt!", Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        String nachricht = "Achtung! Ich hatte möglicherweise einen Sturz. Bitte überprüfe, ob ich Hilfe benötige.\n\n" +
+                           "Mein Standort ist beigefügt.";
+
+        String standortText = "nicht verfügbar";
         LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
         Location location = null;
 
@@ -96,21 +111,18 @@ public class Sturzerkennung extends AppCompatActivity {
             }
         }
 
-        String message = "Möglicher Sturz erkannt! Bitte überprüfen. Standort: ";
         if (location != null) {
-            message += "https://maps.google.com/?q=" + location.getLatitude() + "," + location.getLongitude();
-        } else {
-            message += "Standort nicht verfügbar.";
+            standortText = "https://maps.google.com/?q=" + location.getLatitude() + "," + location.getLongitude();
         }
 
-        String phoneNumber = "DEIN_NOTFALLKONTAKT"; // TODO: Kontakt hinterlegen / dynamisch laden
+        String finalMessage = nachricht + standortText;
 
-        SmsManager smsManager = SmsManager.getDefault();
-        smsManager.sendTextMessage(phoneNumber, null, message, null, null);
-
-        Toast.makeText(this, "Notfall-SMS gesendet", Toast.LENGTH_LONG).show();
-        finish();
+        try {
+            SmsManager smsManager = SmsManager.getDefault();
+            smsManager.sendTextMessage(nummer, null, finalMessage, null, null);
+        }catch(Exception e){
+            Toast.makeText(this, "Fehler beim Senden der SMS: " + e.getMessage(), Toast.LENGTH_LONG).show();
+        }
+    finish();
     }
-
-
 }

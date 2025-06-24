@@ -25,6 +25,15 @@
     <string name="buttonAufgabeBearbeiten">Aufgabe bearbeiten</string>
     <string name="buttonAufgabeLöschen">Aufgabe löschen</string>
     <string name="erledigt">Erledigt</string>
+    <string name="notfallkontakt_verwalten">Notfallkontakt verwalten</string>
+    <string name="vorname">Vorname</string>
+    <string name="nachname">Nachname</string>
+    <string name="verh_ltnis_z_b_ehepartner_tochter">Verhältnis (z.B. Ehepartner, Tochter/Sohn)</string>
+    <string name="telefonnummer">Telefonnummer des Notfallkontakts</string>
+    <string name="vorschau_der_nachricht">Vorschau der Nachricht:</string>
+    <string name="bearbeiten">Bearbeiten</string>
+    <string name="alarm_abbrechen">ALARM ABBRECHEN</string>
+    <string name="Sturznachricht_wird_gesendet">STURZ ERKANNT\nSMS wird in 30 Sekunden an Notfallkontakt gesendet!</string>
     <string-array name="wiederholungsoption"><item>Einmalig</item><item>Täglich</item><item>Wöchentlich</item>
     </string-array>
 </resources>
