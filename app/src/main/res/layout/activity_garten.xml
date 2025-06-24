@@ -3,7 +3,7 @@
     android:id="@+id/gartenHintergrund"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/wiese"
+    android:background="@drawable/wiesehintergrund"
     android:clipChildren="false"
     android:clipToPadding="false">
 </FrameLayout>

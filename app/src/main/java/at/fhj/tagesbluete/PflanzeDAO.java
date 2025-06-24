@@ -18,4 +18,5 @@ public interface PflanzeDAO {
     @Query("SELECT * FROM Pflanzen WHERE nutzername = :nutzername")
     List<Pflanzen>getAllePflanzen(String nutzername);
 
+
 }
