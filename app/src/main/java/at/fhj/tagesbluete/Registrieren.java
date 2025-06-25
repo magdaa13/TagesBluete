@@ -25,8 +25,8 @@ public class Registrieren extends AppCompatActivity {
         setContentView(R.layout.activity_registrieren);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.register_layout), ((v, insets) ->
         { Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-        v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-        return insets;
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+            return insets;
         }));
 
         EditText benutzernameReg = findViewById(R.id.nameInput);

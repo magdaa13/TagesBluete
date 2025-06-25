@@ -1,7 +1,9 @@
 package at.fhj.tagesbluete;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -30,6 +32,16 @@ public class MainActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+        SharedPreferences prefs = getSharedPreferences("TagesBluetePrefs", Context.MODE_PRIVATE);
+        boolean eingeloggtBleiben = prefs.getBoolean("eingeloggt_bleiben", false);
+
+        if(eingeloggtBleiben){
+            Intent intent = new Intent(MainActivity.this,StartUebersicht.class);
+            startActivity(intent);
+            finish();
+            return;
+        }
 
         // Berechtigung prüfen und Service starten
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) { // Android 10+

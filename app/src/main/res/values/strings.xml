@@ -33,6 +33,7 @@
     <string name="vorschau_der_nachricht">Vorschau der Nachricht:</string>
     <string name="bearbeiten">Bearbeiten</string>
     <string name="alarm_abbrechen">ALARM ABBRECHEN</string>
+    <string name="logout">Logout</string>
     <string name="Sturznachricht_wird_gesendet">STURZ ERKANNT\nSMS wird in 30 Sekunden an Notfallkontakt gesendet!</string>
     <string-array name="wiederholungsoption"><item>Einmalig</item><item>Täglich</item><item>Wöchentlich</item>
     </string-array>

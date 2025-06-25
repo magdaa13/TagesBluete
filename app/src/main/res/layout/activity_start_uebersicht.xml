@@ -4,80 +4,94 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp">
+    android:padding="16sp">
+
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/animation"
+        android:layout_width="0sp"
+        android:layout_height="0sp"
+        app:lottie_rawRes="@raw/hands_with_flower"
+        app:lottie_autoPlay="true"
+        app:lottie_loop="true"
+        android:scaleType="fitCenter"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/welcomeText"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHeight_percent="0.35"
+        android:layout_marginBottom="5sp"
+        android:layout_marginTop="8sp"/>
 
     <TextView
-        android:paddingTop="20dp"
         android:id="@+id/welcomeText"
-        android:layout_width="0dp"
+        android:layout_width="0sp"
         android:layout_height="wrap_content"
         android:text="@string/willkommen"
-        android:textSize="40sp"
+        android:textSize="48sp"
         android:textStyle="bold"
         android:textColor="@android:color/black"
-        app:layout_constraintTop_toTopOf="parent"
+        android:gravity="center"
+        app:layout_constraintTop_toBottomOf="@id/animation"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"/>
 
     <TextView
         android:id="@+id/dateText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Montag, 1.1.2025"
-        android:textSize="30sp"
+        android:textSize="32sp"
         app:layout_constraintTop_toBottomOf="@id/welcomeText"
-        android:layout_marginTop="4dp" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="8sp" />
+
+    <Button
+        android:id="@+id/buttonLogout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/logout"
+        android:textSize="14sp"
+        android:backgroundTint="@android:color/darker_gray"
+        android:textColor="@android:color/white"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="8sp" />
 
     <LinearLayout
-        android:paddingTop="350dp"
         android:id="@+id/buttonColumn"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_width="0sp"
+        android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:gravity="start"
-        app:layout_constraintTop_toTopOf="parent"
+        android:gravity="center"
+        app:layout_constraintTop_toBottomOf="@id/dateText"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_gravity="bottom"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/baumAnimation"
-        android:layout_marginTop="24dp"
-        android:layout_marginEnd="16dp">
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="24sp">
 
         <Button
             android:id="@+id/buttonTagesplan"
             android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:layout_marginBottom="16dp"
+            android:layout_height="65sp"
+            android:layout_marginBottom="16sp"
             android:text="@string/tagesplan"
-            />
+            android:textSize="20sp" />
 
         <Button
             android:id="@+id/buttonMeinGarten"
             android:layout_width="match_parent"
-            android:layout_height="60dp"
+            android:layout_height="65sp"
+            android:layout_marginBottom="16sp"
             android:text="@string/mein_garten"
-            android:layout_marginBottom="16dp" />
+            android:textSize="20sp" />
 
         <Button
             android:id="@+id/buttonNotfallkontakte"
             android:layout_width="match_parent"
-            android:layout_height="60dp"
+            android:layout_height="65sp"
             android:text="@string/notfallkontakt"
-            />
+            android:textSize="20sp" />
+
     </LinearLayout>
-
-
-    <com.airbnb.lottie.LottieAnimationView
-        android:id="@+id/baumAnimation"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        app:lottie_rawRes="@raw/tree_animation"
-        app:lottie_autoPlay="true"
-        app:lottie_loop="true"
-        android:scaleType="fitCenter"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@id/buttonColumn"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_margin="16dp" />
 </androidx.constraintlayout.widget.ConstraintLayout>
