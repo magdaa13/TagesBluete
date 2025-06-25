@@ -95,8 +95,9 @@ public class Sturzerkennung extends AppCompatActivity {
             return;
         }
 
-        String nachricht = "Achtung! Ich hatte möglicherweise einen Sturz. Bitte überprüfe, ob ich Hilfe benötige.\n\n" +
-                           "Mein Standort ist beigefügt.";
+        String nachricht = "Achtung! Ich hatte möglicherweise einen Sturz. Bitte kontaktiere mich und überprüfe, ob ich Hilfe benötige.\n\n" +
+                           "Diese Nachricht wurde automatisch von der App TagesBlüte gesendet.\n\n" +
+                           "Standort: ";
 
         String standortText = "nicht verfügbar";
         LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);

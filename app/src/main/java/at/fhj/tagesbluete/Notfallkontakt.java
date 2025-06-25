@@ -95,10 +95,9 @@ public class Notfallkontakt extends AppCompatActivity {
     }
 
     public void aktualisiereNachrichtVorschau(){
-        String nachricht = "Achtung!\n\n" +
-                "Es wurde ein möglicher Sturz erkannt.\n" +
-                "Bitte überprüfen Sie, ob ich Hilfe benötige.\n\n" +
-                "Standort ist beigefügt.";
+        String nachricht = "Achtung! Ich hatte möglicherweise einen Sturz. Bitte kontaktiere mich und überprüfe, ob ich Hilfe benötige.\n\n" +
+                "Diese Nachricht wurde automatisch von der App TagesBlüte gesendet.\n\n" +
+                "Standort: ";
 
         tvNachrichtVorschau.setText(nachricht);
     }

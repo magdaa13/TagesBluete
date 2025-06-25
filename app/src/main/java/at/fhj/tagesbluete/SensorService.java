@@ -33,7 +33,6 @@ public class SensorService extends Service implements SensorEventListener {
     public Handler handler;
     public String CHANNEL_ID = "SturzerkennungsServiceChannel";
 
-    @SuppressLint("ForegroundServiceType")
     @Override
     public void onCreate() {
         super.onCreate();
