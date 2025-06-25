@@ -2,38 +2,34 @@ package at.fhj.tagesbluete;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 import androidx.room.Room;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-
 public class Garten extends AppCompatActivity {
 
-    public FrameLayout gartenHintergrund;
-    public int pflanzenAbstand = 150;
-    public int pflanzengroesse = 200;
-    public int abstandVomRand = 50;
-    public int pflanzenProErledigte = 3;
+    private FrameLayout gartenHintergrund;
+    private TextView titelTextView;
+    private ScrollView scrollView;
 
-    public PflanzeDAO pflanzeDAO;
-    public List<Pflanzen> blumenListe = new ArrayList<>();
+    private int pflanzengroesse = 200;
+    private int abstandVomRand = 50;
+    private int pflanzenProErledigte = 2;
+    public final Random random = new Random();
 
-    public int [] blumenBilder = {
+    private PflanzeDAO pflanzeDAO;
+    private List<Pflanzen> blumenListe = new ArrayList<>();
+
+    private int[] blumenBilder = {
             R.drawable.flowerblue,
             R.drawable.flowerblue2,
             R.drawable.flowergray,
@@ -49,12 +45,11 @@ public class Garten extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_garten);
 
         gartenHintergrund = findViewById(R.id.gartenHintergrund);
 
-        RoomDatenbank db = Room.databaseBuilder(getApplicationContext(),RoomDatenbank.class, "tagesbluete-db").allowMainThreadQueries().build();
+        RoomDatenbank db = Room.databaseBuilder(getApplicationContext(), RoomDatenbank.class, "tagesbluete-db").allowMainThreadQueries().build();
         pflanzeDAO = db.pflanzeDAO();
 
         SharedPreferences prefs = getSharedPreferences("TagesBluetePrefs", MODE_PRIVATE);
@@ -64,8 +59,8 @@ public class Garten extends AppCompatActivity {
 
         blumenListe = pflanzeDAO.getAllePflanzen(nutzername);
 
-        while(blumenListe.size() < pflanzenAnzahl){
-            Pflanzen neu = generiereNeueBlume();
+        while (blumenListe.size() < pflanzenAnzahl) {
+            Pflanzen neu = generiereNeueBlume(nutzername);
             pflanzeDAO.insert(neu);
             blumenListe.add(neu);
         }
@@ -73,14 +68,32 @@ public class Garten extends AppCompatActivity {
         for (Pflanzen f : blumenListe) {
             zeigeBlume(f);
         }
-
     }
 
-    private Pflanzen generiereNeueBlume() {
-        int drawableId = blumenBilder[new Random().nextInt(blumenBilder.length)];
-        int x = generiereZufälligeX();
-        int y = generiereZufälligeY();
-        return new Pflanzen(drawableId, x, y);
+    private Pflanzen generiereNeueBlume(String nutzername) {
+        int drawableId = blumenBilder[random.nextInt(blumenBilder.length)];
+
+        int x, y;
+        boolean positionOk;
+        do {
+            positionOk = true;
+            x = generiereZufallX();
+            y = generiereZufallY();
+
+            for (Pflanzen p : blumenListe) {
+                int dx = p.x - x;
+                int dy = p.y - y;
+                double abstand = Math.sqrt(dx * dx + dy * dy);
+                if (abstand < pflanzengroesse + abstandVomRand) {
+                    positionOk = false;
+                    break;
+                }
+            }
+        } while (!positionOk);
+
+        Pflanzen neue = new Pflanzen(drawableId, x, y);
+        neue.nutzername = nutzername;
+        return neue;
     }
 
     private void zeigeBlume(Pflanzen f) {
@@ -95,37 +108,13 @@ public class Garten extends AppCompatActivity {
         gartenHintergrund.addView(pflanze);
     }
 
-    private void fügePflanzeHinzu() {
-        ImageView pflanze = new ImageView(this);
-
-        int zufallsIndex = new Random().nextInt(blumenBilder.length);
-        pflanze.setImageResource(blumenBilder[zufallsIndex]);
-
-        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(pflanzengroesse, pflanzengroesse);
-
-        int x = generiereZufälligeX();
-        int y = generiereZufälligeY();
-
-        params.leftMargin = x;
-        params.topMargin = y;
-
-        pflanze.setLayoutParams(params);
-        gartenHintergrund.addView(pflanze);
-    }
-
-    public int generiereZufälligeX() {
+    private int generiereZufallX() {
         int breite = getResources().getDisplayMetrics().widthPixels;
         return abstandVomRand + new Random().nextInt(Math.max(1, breite - pflanzengroesse - abstandVomRand));
     }
 
-    public int generiereZufälligeY() {
-        int höhe = getResources().getDisplayMetrics().heightPixels;
-        return abstandVomRand + new Random().nextInt(Math.max(1, höhe - pflanzengroesse - abstandVomRand - 200));
+    private int generiereZufallY() {
+        int hoehe = getResources().getDisplayMetrics().heightPixels * 3; // für Scrollview mehr Platz nach unten
+        return abstandVomRand + new Random().nextInt(Math.max(1, hoehe - pflanzengroesse - abstandVomRand));
     }
-
-    }
-
-
-
-
-
+}
