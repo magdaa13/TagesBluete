@@ -202,7 +202,7 @@ public class Tagesplan extends AppCompatActivity {
             }
         }
 
-        if(erledigteGesamt % 10 == 0){
+        if(erledigteGesamt % 2 == 0){
             String [] arten = {"rose", "tulpe", "sonnenblume"};
             String zufallsArt = arten[new Random().nextInt(arten.length)];
 
