@@ -19,7 +19,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+import com.google.android.material.snackbar.Snackbar;
 
 import java.util.List;
 import java.util.Random;
@@ -182,12 +183,14 @@ public class Tagesplan extends AppCompatActivity {
         }
         return result;
     }
-    public void belohneMitPflanze(int erledigteGesamt){
+    public boolean belohneMitPflanze(int erledigteGesamt){
         SharedPreferences prefs = getSharedPreferences("TagesBluetePrefs", MODE_PRIVATE);
         String nutzername = prefs.getString("nutzername","");
         PflanzeDAO pflanzeDAO = db.pflanzeDAO();
 
         List<Pflanzen> alle = pflanzeDAO.getAllePflanzen(nutzername);
+
+        boolean neuePflanzeFreigeschaltet = false;
 
         if(erledigteGesamt % 5 == 0 && !alle.isEmpty()){
             for(Pflanzen p : alle){
@@ -209,8 +212,11 @@ public class Tagesplan extends AppCompatActivity {
             neue.nutzername = nutzername;
 
             pflanzeDAO.insert(neue);
+            neuePflanzeFreigeschaltet = true;
 
         }
+
+        return neuePflanzeFreigeschaltet;
 
     }
     public void speichereFortschrittUndBelohne(){
@@ -222,7 +228,22 @@ public class Tagesplan extends AppCompatActivity {
 
         editor.putInt("erledigte_gesamt", erledigteZähler);
         editor.apply();
-        belohneMitPflanze(erledigteZähler);
 
+        boolean neuePflanze = belohneMitPflanze(erledigteZähler);
+
+        if(neuePflanze){
+            zeigePflanzenFreischaltDialog();
+        }
+
+
+    }
+
+    public void zeigePflanzenFreischaltDialog() {
+        new androidx.appcompat.app.AlertDialog.Builder(this)
+                .setTitle("Glückwunsch 🌱")
+                .setMessage("Du hast eine neue Pflanze freigeschaltet!\nSchau gleich in deinem Garten vorbei – er wird von Tag zu Tag schöner.")
+                .setPositiveButton("Super!", (dialog, which) -> dialog.dismiss())
+                .setCancelable(false)
+                .show();
     }
     }

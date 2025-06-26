@@ -65,6 +65,8 @@ public class Garten extends AppCompatActivity {
         for (Pflanzen f : blumenListe) {
             zeigeBlume(f);
         }
+
+        zeigeStartPopUp();
     }
 
     private Pflanzen generiereNeueBlume(String nutzername) {
@@ -114,4 +116,23 @@ public class Garten extends AppCompatActivity {
         int hoehe = getResources().getDisplayMetrics().heightPixels * 3; // für Scrollview mehr Platz nach unten
         return abstandVomRand + new Random().nextInt(Math.max(1, hoehe - pflanzengroesse - abstandVomRand));
     }
+
+    public void zeigeStartPopUp() {
+        String[] nachrichten = {
+                "Erledige deine Aufgaben – und sieh zu, wie dein Garten erblüht!",
+                "Ein schöner Garten wächst mit deinen Erfolgen!",
+                "Mach mit: Je mehr du schaffst, desto bunter wird dein Garten!"
+        };
+
+        int zufallsIndex = new Random().nextInt(nachrichten.length);
+        String zufallsNachricht = nachrichten[zufallsIndex];
+
+        new androidx.appcompat.app.AlertDialog.Builder(this)
+                .setTitle("Willkommen im Garten 🌸")
+                .setMessage(zufallsNachricht)
+                .setPositiveButton("Los geht's!", (dialog, which) -> dialog.dismiss())
+                .setCancelable(false)
+                .show();
+    }
+
 }
