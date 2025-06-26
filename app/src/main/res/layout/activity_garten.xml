@@ -26,11 +26,11 @@
 
         <com.airbnb.lottie.LottieAnimationView
             android:id="@+id/lottieAnimationView"
-            android:layout_width="50sp"
-            android:layout_height="50sp"
+            android:layout_width="150sp"
+            android:layout_height="150sp"
             app:lottie_autoPlay="true"
             app:lottie_loop="true"
-            app:lottie_rawRes="@raw/hands_with_flower" />
+            app:lottie_rawRes="@raw/trolley_with_flower" />
     </LinearLayout>
 
     <ScrollView
