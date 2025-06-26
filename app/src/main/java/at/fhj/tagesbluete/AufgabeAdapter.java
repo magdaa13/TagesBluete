@@ -125,7 +125,7 @@ public class AufgabeAdapter extends RecyclerView.Adapter<AufgabeAdapter.AufgabeV
 
         public AufgabeViewHolder(@NonNull View itemView) {
             super(itemView);
-            titelView = itemView.findViewById(R.id.textViewTitel);
-            checkBox = itemView.findViewById(R.id.checkboxErledigt);
+            titelView = itemView.findViewById(R.id.text_titel);
+            checkBox = itemView.findViewById(R.id.checkbox_erledigt);
         }
 }}

@@ -43,11 +43,11 @@ public class NeueAufgaben extends AppCompatActivity {
         String eingeloggterNutzername = prefs.getString("nutzername", "");  // Fallback: leerer String
 
 
-        EditText TextTitel = findViewById(R.id.editTextTitel);
-        EditText TextDatum = findViewById(R.id.editTextDatum);
-        EditText TextUhrzeit = findViewById(R.id.editTextUhrzeit);
-        Spinner SpinnerWH = findViewById(R.id.spinnerWiederholung);
-        Button buttonHinzufügen = findViewById(R.id.buttonHinzufuegen);
+        EditText TextTitel = findViewById(R.id.input_titel);
+        EditText TextDatum = findViewById(R.id.input_datum);
+        EditText TextUhrzeit = findViewById(R.id.input_uhrzeit);
+        Spinner SpinnerWH = findViewById(R.id.spinner_wiederholung);
+        Button buttonHinzufügen = findViewById(R.id.button_hinzufuegen);
 
         ArrayAdapter<CharSequence>adapter = ArrayAdapter.createFromResource(
                 this,

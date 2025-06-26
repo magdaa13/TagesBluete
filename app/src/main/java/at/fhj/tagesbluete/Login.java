@@ -25,9 +25,9 @@ public class Login extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_login);
 
-        EditText eingabeBenutzer = findViewById(R.id.usernameInput);
-        EditText eingabePasswort = findViewById(R.id.passwordInput);
-        Button loginBestätigen = findViewById(R.id.loginBestätigenButton);
+        EditText eingabeBenutzer = findViewById(R.id.input_usernameInput);
+        EditText eingabePasswort = findViewById(R.id.input_passwordInput);
+        Button loginBestätigen = findViewById(R.id.button_loginBestätigenButton);
 
         userDao = RoomDatenbank.getInstance(getApplicationContext()).userDao();
 
@@ -41,7 +41,6 @@ public class Login extends AppCompatActivity {
 
                 runOnUiThread(() -> {
                     if (benutzer != null) {
-                        // SharedPreferences speichern
                         SharedPreferences prefs = getSharedPreferences("TagesBluetePrefs", Context.MODE_PRIVATE);
                         SharedPreferences.Editor editor = prefs.edit();
                         editor.putString("nutzername", benutzer.benutzername);

@@ -7,7 +7,7 @@
 
 
     <ImageView
-        android:id="@+id/alarmIcon"
+        android:id="@+id/image_alarmicon"
         android:layout_width="150sp"
         android:layout_height="150sp"
         android:src="@drawable/alarm"
@@ -17,8 +17,8 @@
         app:layout_constraintEnd_toEndOf="parent" />
 
     <TextView
-        android:id="@+id/tvAlarmText"
-        android:layout_width="0dp"
+        android:id="@+id/text_alarmtext"
+        android:layout_width="0sp"
         android:layout_height="wrap_content"
         android:layout_margin="24sp"
         android:layout_marginTop="76sp"
@@ -29,12 +29,12 @@
         android:textSize="25sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.666"
+        app:layout_constraintHorizontal_bias="0.6"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/alarmIcon" />
+        app:layout_constraintTop_toBottomOf="@+id/image_alarmicon" />
 
     <Button
-        android:id="@+id/cancelButton"
+        android:id="@+id/button_cancel"
         android:layout_width="match_parent"
         android:layout_height="80sp"
         android:text="@string/alarm_abbrechen"

@@ -18,13 +18,10 @@ import java.util.Random;
 public class Garten extends AppCompatActivity {
 
     private FrameLayout gartenHintergrund;
-    private TextView titelTextView;
-    private ScrollView scrollView;
-
     private int pflanzengroesse = 200;
     private int abstandVomRand = 50;
     private int pflanzenProErledigte = 2;
-    public final Random random = new Random();
+    private final Random random = new Random();
 
     private PflanzeDAO pflanzeDAO;
     private List<Pflanzen> blumenListe = new ArrayList<>();

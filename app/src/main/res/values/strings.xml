@@ -36,6 +36,7 @@
     <string name="logout">Logout</string>
     <string name="Sturznachricht_wird_gesendet">STURZ ERKANNT\nSMS wird in 30 Sekunden an Notfallkontakt gesendet!</string>
     <string name="ueberschrift_mein_garten">Mein Garten</string>
+    <string name="datum_text">Montag, 1.1.2025</string>
     <string-array name="wiederholungsoption"><item>Einmalig</item><item>Täglich</item><item>Wöchentlich</item>
     </string-array>
 </resources>

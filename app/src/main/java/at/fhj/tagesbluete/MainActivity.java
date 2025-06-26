@@ -54,8 +54,8 @@ public class MainActivity extends AppCompatActivity {
             startSensorService();
         }
 
-        Button buttonLogin = findViewById(R.id.loginBestätigenButton);
-        Button buttonRegistrieren = findViewById(R.id.registerButton);
+        Button buttonLogin = findViewById(R.id.button_loginBestätigen);
+        Button buttonRegistrieren = findViewById(R.id.button_register);
 
         //Login Button
         buttonLogin.setOnClickListener(v -> {

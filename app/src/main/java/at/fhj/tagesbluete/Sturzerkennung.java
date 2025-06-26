@@ -36,7 +36,7 @@ public class Sturzerkennung extends AppCompatActivity {
 
         sendAlertRunnable = this::sendEmergencySMS;
 
-        Button cancelButton = findViewById(R.id.cancelButton);
+        Button cancelButton = findViewById(R.id.button_cancel);
         cancelButton.setOnClickListener(v -> {
             handler.removeCallbacks(sendAlertRunnable);
             Toast.makeText(this, "Alarm abgebrochen", Toast.LENGTH_SHORT).show();

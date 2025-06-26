@@ -6,81 +6,76 @@
     android:id="@+id/login_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="24dp"
+    android:padding="24sp"
     tools:context=".Login">
 
-    <!-- Nutzername-Label -->
     <TextView
-        android:id="@+id/usernameLabel"
+        android:id="@+id/text_usernameLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/nutzername"
-        android:textSize="16sp"
+        android:textSize="20sp"
         android:textColor="@android:color/black"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="80dp"/>
+        android:layout_marginTop="80sp"/>
 
-    <!-- Nutzername-Eingabe -->
     <EditText
-        android:id="@+id/usernameInput"
-        android:layout_width="0dp"
+        android:id="@+id/input_usernameInput"
+        android:layout_width="0sp"
         android:layout_height="wrap_content"
         android:hint="@string/z_b_vorname_nachname"
         android:inputType="textPersonName"
-        app:layout_constraintTop_toBottomOf="@id/usernameLabel"
+        app:layout_constraintTop_toBottomOf="@id/text_usernameLabel"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="8dp"/>
+        android:layout_marginTop="8sp"
+        android:textSize="20sp"/>
 
-    <!-- Passwort-Label -->
     <TextView
-        android:id="@+id/passwordLabel"
+        android:id="@+id/text_passwordLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/passwort"
-        android:textSize="16sp"
+        android:textSize="20sp"
         android:textColor="@android:color/black"
-        app:layout_constraintTop_toBottomOf="@id/usernameInput"
+        app:layout_constraintTop_toBottomOf="@id/input_usernameInput"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="24dp"/>
 
-    <!-- Passwort-Eingabe -->
     <EditText
-        android:id="@+id/passwordInput"
-        android:layout_width="0dp"
+        android:id="@+id/input_passwordInput"
+        android:layout_width="0sp"
         android:layout_height="wrap_content"
         android:hint="@string/passwort_eingeben"
         android:inputType="textPassword"
-        app:layout_constraintTop_toBottomOf="@id/passwordLabel"
+        app:layout_constraintTop_toBottomOf="@id/text_passwordLabel"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="8dp"/>
+        android:layout_marginTop="8sp"
+        android:textSize="20sp"/>
 
-    <!-- Bestätigen-Button -->
     <Button
-        android:id="@+id/loginBestätigenButton"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:id="@+id/button_loginBestätigenButton"
+        android:layout_width="0sp"
+        android:layout_height="60sp"
         android:text="@string/bestätigen"
-        app:layout_constraintTop_toBottomOf="@id/passwordInput"
+        app:layout_constraintTop_toBottomOf="@id/input_passwordInput"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="32dp"/>
+        android:layout_marginTop="32sp"/>
 
     <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
+        android:id="@+id/image_registerLogo"
+        android:layout_width="100sp"
+        android:layout_height="100sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginBottom="32dp"
+        android:layout_marginBottom="35sp"
         app:srcCompat="@drawable/logo_icon"
-         />
-
-    <!-- Kleines Logo unten -->
+        />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

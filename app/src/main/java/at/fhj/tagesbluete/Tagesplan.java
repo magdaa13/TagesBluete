@@ -39,13 +39,13 @@ public class Tagesplan extends AppCompatActivity {
         setContentView(R.layout.activity_tagesplan);
         db = RoomDatenbank.getInstance(this);
 
-        recyclerView = findViewById(R.id.recyclerViewAufgaben);
+        recyclerView = findViewById(R.id.recycler_aufgaben);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        Button buttonAufgabeLöschen = findViewById(R.id.buttonAufgabeLöschen);
-        Button buttonAufgabeBearbeiten = findViewById(R.id.buttonAufgabeBearbeiten);
-        Button buttonAufgabeIstErledigt = findViewById(R.id.buttonAufgabeErledigen);
-        Button buttonAufgabeHinzufügen = findViewById(R.id.buttonNeueAufgabe);
+        Button buttonAufgabeLöschen = findViewById(R.id.button_aufgabelöschen);
+        Button buttonAufgabeBearbeiten = findViewById(R.id.button_aufgabebearbeiten);
+        Button buttonAufgabeIstErledigt = findViewById(R.id.button_aufgabeerledigen);
+        Button buttonAufgabeHinzufügen = findViewById(R.id.button_neueaufgabe);
 
         buttonAufgabeLöschen.setOnClickListener(v -> {
             List<Aufgabe> ausgewählteAufgaben = adapter.getSelectedAufgaben();

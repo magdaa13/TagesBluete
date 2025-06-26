@@ -1,10 +1,10 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="24dp">
+    android:padding="24sp">
 
     <TextView
-        android:id="@+id/textTagesplan"
+        android:id="@+id/text_tagesplan"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
@@ -13,41 +13,41 @@
         android:textStyle="bold" />
 
     <TextView
-        android:id="@+id/textHeutigeAufgaben"
+        android:id="@+id/text_heutigeaufgaben"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/textTagesplan"
-        android:layout_marginTop="16dp"
+        android:layout_below="@id/text_tagesplan"
+        android:layout_marginTop="16sp"
         android:text="@string/heutige_aufgaben"
         android:textSize="25sp" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerViewAufgaben"
+        android:id="@+id/recycler_aufgaben"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_below="@id/textHeutigeAufgaben"
-        android:layout_above="@id/buttonGrid"
-        android:layout_marginTop="12dp" />
+        android:layout_height="0sp"
+        android:layout_below="@id/text_heutigeaufgaben"
+        android:layout_above="@id/button_grid"
+        android:layout_marginTop="12sp" />
 
     <LinearLayout
-        android:id="@+id/buttonGrid"
+        android:id="@+id/button_grid"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:orientation="vertical"
         android:gravity="center"
-        android:layout_marginBottom="16dp">
+        android:layout_marginBottom="16sp">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="60dp"
+            android:layout_height="60sp"
             android:orientation="horizontal"
             android:weightSum="2"
-            android:layout_marginBottom="8dp">
+            android:layout_marginBottom="8sp">
 
             <Button
-                android:id="@+id/buttonAufgabeBearbeiten"
-                android:layout_width="0dp"
+                android:id="@+id/button_aufgabebearbeiten"
+                android:layout_width="0sp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:backgroundTint="@color/petrolDunkel"
@@ -55,8 +55,8 @@
                 android:textColor="@android:color/white" />
 
             <Button
-                android:id="@+id/buttonAufgabeLöschen"
-                android:layout_width="0dp"
+                android:id="@+id/button_aufgabelöschen"
+                android:layout_width="0sp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:backgroundTint="@color/petrolDunkel"
@@ -66,13 +66,13 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="60dp"
+            android:layout_height="60sp"
             android:orientation="horizontal"
             android:weightSum="2">
 
             <Button
-                android:id="@+id/buttonAufgabeErledigen"
-                android:layout_width="0dp"
+                android:id="@+id/button_aufgabeerledigen"
+                android:layout_width="0sp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:backgroundTint="@color/petrolMittel"
@@ -80,12 +80,12 @@
                 android:textColor="@android:color/white" />
 
             <Button
-                android:id="@+id/buttonNeueAufgabe"
-                android:layout_width="0dp"
+                android:id="@+id/button_neueaufgabe"
+                android:layout_width="0sp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:backgroundTint="@color/petrolMittel"
-                android:drawablePadding="8dp"
+                android:drawablePadding="8sp"
                 android:text="@string/neue_aufgabe_hinzufuegen"
                 android:textColor="@android:color/white" />
         </LinearLayout>

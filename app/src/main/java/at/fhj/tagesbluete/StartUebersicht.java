@@ -22,22 +22,22 @@ public class StartUebersicht extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_start_uebersicht);
 
-        Button buttonTagesplan = findViewById(R.id.buttonTagesplan);
+        Button buttonTagesplan = findViewById(R.id.button_tagesplan);
         buttonTagesplan.setOnClickListener(v -> {
             startActivity(new Intent(StartUebersicht.this, Tagesplan.class));
         });
 
-        Button buttonMeinGarten = findViewById(R.id.buttonMeinGarten);
+        Button buttonMeinGarten = findViewById(R.id.button_meingarten);
         buttonMeinGarten.setOnClickListener(v -> {
             startActivity(new Intent(StartUebersicht.this, Garten.class));
         });
 
-        Button buttonNotfallkontakt = findViewById(R.id.buttonNotfallkontakte);
+        Button buttonNotfallkontakt = findViewById(R.id.button_notfallkontakte);
         buttonNotfallkontakt.setOnClickListener(v -> {
             startActivity(new Intent(StartUebersicht.this, Notfallkontakt.class));
         });
 
-        Button buttonlogout = findViewById(R.id.buttonLogout);
+        Button buttonlogout = findViewById(R.id.button_logout);
         buttonlogout.setOnClickListener(v -> {
             SharedPreferences prefs = getSharedPreferences("TagesBluetePrefs", Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = prefs.edit();
@@ -51,7 +51,7 @@ public class StartUebersicht extends AppCompatActivity {
         });
 
 
-        TextView dateText = findViewById(R.id.dateText);
+        TextView dateText = findViewById(R.id.text_date);
         SimpleDateFormat sdf = new SimpleDateFormat("EEEE, d.M.yyyy", Locale.GERMAN);;
         String currentDate = sdf.format(new Date());
         dateText.setText(currentDate);

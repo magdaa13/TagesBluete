@@ -15,7 +15,7 @@
         app:lottie_loop="true"
         android:scaleType="fitCenter"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/welcomeText"
+        app:layout_constraintBottom_toTopOf="@id/text_welcome"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHeight_percent="0.35"
@@ -23,11 +23,11 @@
         android:layout_marginTop="8sp"/>
 
     <TextView
-        android:id="@+id/welcomeText"
+        android:id="@+id/text_welcome"
         android:layout_width="0sp"
         android:layout_height="wrap_content"
         android:text="@string/willkommen"
-        android:textSize="48sp"
+        android:textSize="40sp"
         android:textStyle="bold"
         android:textColor="@android:color/black"
         android:gravity="center"
@@ -36,18 +36,18 @@
         app:layout_constraintEnd_toEndOf="parent"/>
 
     <TextView
-        android:id="@+id/dateText"
+        android:id="@+id/text_date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Montag, 1.1.2025"
-        android:textSize="32sp"
-        app:layout_constraintTop_toBottomOf="@id/welcomeText"
+        android:text="@string/datum_text"
+        android:textSize="30sp"
+        app:layout_constraintTop_toBottomOf="@id/text_welcome"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="8sp" />
 
     <Button
-        android:id="@+id/buttonLogout"
+        android:id="@+id/button_logout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/logout"
@@ -64,14 +64,14 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:gravity="center"
-        app:layout_constraintTop_toBottomOf="@id/dateText"
+        app:layout_constraintTop_toBottomOf="@id/text_date"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="24sp">
 
         <Button
-            android:id="@+id/buttonTagesplan"
+            android:id="@+id/button_tagesplan"
             android:layout_width="match_parent"
             android:layout_height="65sp"
             android:layout_marginBottom="16sp"
@@ -79,7 +79,7 @@
             android:textSize="20sp" />
 
         <Button
-            android:id="@+id/buttonMeinGarten"
+            android:id="@+id/button_meingarten"
             android:layout_width="match_parent"
             android:layout_height="65sp"
             android:layout_marginBottom="16sp"
@@ -87,7 +87,7 @@
             android:textSize="20sp" />
 
         <Button
-            android:id="@+id/buttonNotfallkontakte"
+            android:id="@+id/button_notfallkontakte"
             android:layout_width="match_parent"
             android:layout_height="65sp"
             android:text="@string/notfallkontakt"

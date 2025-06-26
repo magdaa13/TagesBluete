@@ -6,104 +6,96 @@
     android:id="@+id/register_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="24dp"
+    android:padding="24sp"
     tools:context=".Registrieren">
 
-    <!-- Name-Label -->
     <TextView
-        android:id="@+id/nameLabel"
+        android:id="@+id/text_nameLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/nutzername"
-        android:textSize="16sp"
+        android:textSize="20sp"
         android:textColor="@android:color/black"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="80dp"/>
 
-    <!-- Name-Eingabe -->
     <EditText
-        android:id="@+id/nameInput"
-        android:layout_width="0dp"
+        android:id="@+id/input_name"
+        android:layout_width="0sp"
         android:layout_height="wrap_content"
         android:hint="@string/z_b_vorname_nachname"
         android:inputType="textPersonName"
-        app:layout_constraintTop_toBottomOf="@id/nameLabel"
+        app:layout_constraintTop_toBottomOf="@id/text_nameLabel"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="8dp"/>
+        android:layout_marginTop="8sp"/>
 
-    <!-- Passwort-Label -->
     <TextView
-        android:id="@+id/passwordLabel"
+        android:id="@+id/text_passwordLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/passwort"
-        android:textSize="16sp"
+        android:textSize="20sp"
         android:textColor="@android:color/black"
-        app:layout_constraintTop_toBottomOf="@id/nameInput"
+        app:layout_constraintTop_toBottomOf="@id/input_name"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="24dp"/>
+        android:layout_marginTop="24sp"/>
 
-    <!-- Passwort-Eingabe -->
     <EditText
-        android:id="@+id/passwordInput"
-        android:layout_width="0dp"
+        android:id="@+id/input_password"
+        android:layout_width="0sp"
         android:layout_height="wrap_content"
         android:hint="@string/passwort_eingeben"
         android:inputType="textPassword"
-        app:layout_constraintTop_toBottomOf="@id/passwordLabel"
+        app:layout_constraintTop_toBottomOf="@id/text_passwordLabel"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="8dp"/>
+        android:layout_marginTop="8sp"/>
 
-    <!-- Passwort wiederholen-Label -->
     <TextView
-        android:id="@+id/passwordRepeatLabel"
+        android:id="@+id/text_passwordRepeatLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/passwort_wiederholen"
-        android:textSize="16sp"
+        android:textSize="20sp"
         android:textColor="@android:color/black"
-        app:layout_constraintTop_toBottomOf="@id/passwordInput"
+        app:layout_constraintTop_toBottomOf="@id/input_password"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="24dp"/>
+        android:layout_marginTop="24sp"/>
 
-    <!-- Passwort wiederholen-Eingabe -->
     <EditText
-        android:id="@+id/passwordRepeatInput"
-        android:layout_width="0dp"
+        android:id="@+id/input_passwordRepeat"
+        android:layout_width="0sp"
         android:layout_height="wrap_content"
         android:hint="@string/passwort_erneut_eingeben"
         android:inputType="textPassword"
-        app:layout_constraintTop_toBottomOf="@id/passwordRepeatLabel"
+        app:layout_constraintTop_toBottomOf="@id/text_passwordRepeatLabel"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="8dp"/>
+        android:layout_marginTop="8sp"/>
 
-    <!-- Bestätigen-Button -->
     <Button
-        android:id="@+id/registerButton"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:id="@+id/button_register"
+        android:layout_width="0sp"
+        android:layout_height="60sp"
         android:text="@string/bestätigen"
-        app:layout_constraintTop_toBottomOf="@id/passwordRepeatInput"
+        app:layout_constraintTop_toBottomOf="@id/input_passwordRepeat"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="32dp"/>
+        android:layout_marginTop="32sp"/>
 
-    <!-- Logo unten -->
     <ImageView
-        android:id="@+id/registerLogo"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
+        android:id="@+id/image_registerLogo"
+        android:layout_width="100sp"
+        android:layout_height="100sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginBottom="32dp"
+        android:layout_marginBottom="35sp"
         app:srcCompat="@drawable/logo_icon"
         />
 

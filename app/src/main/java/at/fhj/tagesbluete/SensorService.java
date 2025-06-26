@@ -29,8 +29,7 @@ public class SensorService extends Service implements SensorEventListener {
     public Sensor motionSensor;
 
     public long lastMovementTime = System.currentTimeMillis();
-    public static final long INACTIVITY_THRESHOLD = 1000 * 60 * 30;
-    public Handler handler;
+    public static final long INACTIVITY_THRESHOLD = 1000 * 60 * 60 * 3;
     public String CHANNEL_ID = "SturzerkennungsServiceChannel";
 
     @Override
@@ -38,12 +37,10 @@ public class SensorService extends Service implements SensorEventListener {
         super.onCreate();
         createNotificationChannel();
         startForeground(1,buildForegroundNotification());
-        handler = new Handler(Looper.getMainLooper()) {
-        };
 
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-        motionSensor = sensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION); // oder TYPE_ACCELEROMETER
+        motionSensor = sensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
 
         if (accelerometer != null)
             sensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_NORMAL);
@@ -83,17 +80,43 @@ public class SensorService extends Service implements SensorEventListener {
         }
     }
 
+    private boolean inactivityNotified = false;
+
     private void detectInactivity(SensorEvent event) {
         float movement = Math.abs(event.values[0]) + Math.abs(event.values[1]) + Math.abs(event.values[2]);
-        if (movement > 0.5) {
-            lastMovementTime = System.currentTimeMillis();
-        } else {
-            long currentTime = System.currentTimeMillis();
-            if (currentTime - lastMovementTime > INACTIVITY_THRESHOLD) {
-                showInactivityReminder();
-            }
+
+        long currentTime = System.currentTimeMillis();
+
+        if (movement > 0.5f) {
+            lastMovementTime = currentTime;
+            inactivityNotified = false; // wird Bewegung erkannt, wird Benachrichtigung zurückgesetzt
+        }
+
+        if (!inactivityNotified && currentTime - lastMovementTime > INACTIVITY_THRESHOLD) {
+            inactivityNotified = true;
+            showInactivityReminderNotification();
         }
     }
+    public void showInactivityReminderNotification() {
+        String[] messages = {
+                "Lust auf einen Spaziergang?",
+                "Wie wär's mit ein paar Turnübungen?",
+                "Zeit, sich ein bisschen zu bewegen!",
+                "Bewegung tut gut – los geht's!"
+        };
+        String message = messages[new java.util.Random().nextInt(messages.length)];
+
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
+                .setSmallIcon(R.drawable.warning)
+                .setContentTitle("Bewegungserinnerung")
+                .setContentText(message)
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setAutoCancel(true);
+
+        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.notify((int) System.currentTimeMillis(), builder.build());
+    }
+
 
     @Override public void onAccuracyChanged(Sensor sensor, int accuracy) {}
 
@@ -106,18 +129,12 @@ public class SensorService extends Service implements SensorEventListener {
         });
     }
 
-    private void showInactivityReminder() {
-        new Handler(Looper.getMainLooper()).post(() -> {
-            Toast.makeText(getApplicationContext(), "Bewegungserinnerung: Bitte machen Sie einen kurzen Spaziergang.", Toast.LENGTH_LONG).show();
-        });
-    }
-
     public void createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel serviceChannel = new NotificationChannel(
                     CHANNEL_ID,
                     "Sturzerkennung Hintergrunddienst",
-                    NotificationManager.IMPORTANCE_LOW
+                    NotificationManager.IMPORTANCE_HIGH
             );
 
             NotificationManager manager = getSystemService(NotificationManager.class);
