@@ -126,10 +126,12 @@ public class Garten extends AppCompatActivity {
 
         int zufallsIndex = new Random().nextInt(nachrichten.length);
         String zufallsNachricht = nachrichten[zufallsIndex];
+        String kompletterText = zufallsNachricht + "\n\nTipp: Wische nach unten, um den ganzen Garten zu sehen!";
+
 
         new androidx.appcompat.app.AlertDialog.Builder(this, androidx.appcompat.R.style.Theme_AppCompat_Light_Dialog_Alert)
                 .setTitle("Willkommen im Garten 🌸")
-                .setMessage(zufallsNachricht)
+                .setMessage(kompletterText)
                 .setPositiveButton("Los geht's!", (dialog, which) -> dialog.dismiss())
                 .setCancelable(false)
                 .show();

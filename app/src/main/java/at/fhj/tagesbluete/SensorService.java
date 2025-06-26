@@ -1,6 +1,5 @@
 package at.fhj.tagesbluete;
 
-import android.annotation.SuppressLint;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -13,49 +12,47 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Build;
+import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
-import android.os.Handler;
-import android.widget.Toast;
 
 import androidx.core.app.NotificationCompat;
 
-import java.util.logging.LogRecord;
-
 public class SensorService extends Service implements SensorEventListener {
 
-    public SensorManager sensorManager;
-    public Sensor accelerometer;
-    public Sensor motionSensor;
+    private SensorManager sensorManager;
+    private Sensor accelerometer;
+    private Sensor motionSensor;
 
-    public long lastMovementTime = System.currentTimeMillis();
-    public static final long INACTIVITY_THRESHOLD = 1000 * 60 * 60 * 3;
-    public String CHANNEL_ID = "SturzerkennungsServiceChannel";
+    private long lastMovementTime = System.currentTimeMillis();
+    private static final long INACTIVITY_THRESHOLD = 1000 * 60 * 60 * 3; // 3 Stunden
+    private static final String CHANNEL_ID = "SturzerkennungsServiceChannel";
 
     @Override
     public void onCreate() {
         super.onCreate();
         createNotificationChannel();
-        startForeground(1,buildForegroundNotification());
+        startForeground(1, buildForegroundNotification());
 
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         motionSensor = sensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
 
-        if (accelerometer != null)
+        if (accelerometer != null) {
             sensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_NORMAL);
-        if (motionSensor != null)
+        }
+        if (motionSensor != null) {
             sensorManager.registerListener(this, motionSensor, SensorManager.SENSOR_DELAY_NORMAL);
-    }
-
-
-    @Override
-    public int onStartCommand(Intent intent, int flags, int startId){
-        return START_STICKY;
+        }
     }
 
     @Override
-    public void onDestroy(){
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        return START_STICKY; // Service soll nach Beendigung neu starten
+    }
+
+    @Override
+    public void onDestroy() {
         super.onDestroy();
         sensorManager.unregisterListener(this);
     }
@@ -69,18 +66,18 @@ public class SensorService extends Service implements SensorEventListener {
         }
     }
 
+    private boolean inactivityNotified = false;
+
     private void detectFall(SensorEvent event) {
         float x = event.values[0];
         float y = event.values[1];
         float z = event.values[2];
-        double acceleration = Math.sqrt(x*x + y*y + z*z);
+        double acceleration = Math.sqrt(x * x + y * y + z * z);
 
-        if (acceleration > 25) { // Schwelle
+        if (acceleration > 25) { // Schwelle für Sturz
             triggerFallDetected();
         }
     }
-
-    private boolean inactivityNotified = false;
 
     private void detectInactivity(SensorEvent event) {
         float movement = Math.abs(event.values[0]) + Math.abs(event.values[1]) + Math.abs(event.values[2]);
@@ -89,7 +86,7 @@ public class SensorService extends Service implements SensorEventListener {
 
         if (movement > 0.5f) {
             lastMovementTime = currentTime;
-            inactivityNotified = false; // wird Bewegung erkannt, wird Benachrichtigung zurückgesetzt
+            inactivityNotified = false;
         }
 
         if (!inactivityNotified && currentTime - lastMovementTime > INACTIVITY_THRESHOLD) {
@@ -97,7 +94,8 @@ public class SensorService extends Service implements SensorEventListener {
             showInactivityReminderNotification();
         }
     }
-    public void showInactivityReminderNotification() {
+
+    private void showInactivityReminderNotification() {
         String[] messages = {
                 "Lust auf einen Spaziergang?",
                 "Wie wär's mit ein paar Turnübungen?",
@@ -117,10 +115,6 @@ public class SensorService extends Service implements SensorEventListener {
         notificationManager.notify((int) System.currentTimeMillis(), builder.build());
     }
 
-
-    @Override public void onAccuracyChanged(Sensor sensor, int accuracy) {}
-
-
     private void triggerFallDetected() {
         new Handler(Looper.getMainLooper()).post(() -> {
             Intent intent = new Intent(this, Sturzerkennung.class);
@@ -129,7 +123,7 @@ public class SensorService extends Service implements SensorEventListener {
         });
     }
 
-    public void createNotificationChannel() {
+    private void createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel serviceChannel = new NotificationChannel(
                     CHANNEL_ID,
@@ -143,26 +137,28 @@ public class SensorService extends Service implements SensorEventListener {
             }
         }
     }
-    public Notification buildForegroundNotification() {
+
+    private Notification buildForegroundNotification() {
         Intent notificationIntent = new Intent(this, MainActivity.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(
-                this, 0, notificationIntent,
-                PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT
-        );
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0,
+                notificationIntent,
+                PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
 
         return new NotificationCompat.Builder(this, CHANNEL_ID)
-                .setContentTitle("Sturzerkennung aktiv")
-                .setContentText("Die App überwacht Bewegungen im Hintergrund.")
+                .setContentTitle("TagesBlüte Aktiv")
+                .setContentText("Der Sturzerkennungsdienst läuft im Hintergrund")
                 .setSmallIcon(R.drawable.warning)
                 .setContentIntent(pendingIntent)
-                .setOngoing(true)
                 .build();
     }
 
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
+        // Nicht benötigt
+    }
 
     @Override
     public IBinder onBind(Intent intent) {
-        return null;
+        return null; // Kein Binding
     }
-
 }
