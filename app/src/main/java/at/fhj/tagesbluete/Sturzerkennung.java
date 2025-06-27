@@ -1,6 +1,5 @@
 package at.fhj.tagesbluete;
 
-import android.annotation.SuppressLint;
 import androidx.annotation.NonNull;
 
 import android.Manifest;
@@ -22,10 +21,10 @@ import android.os.Handler;
 
 public class Sturzerkennung extends AppCompatActivity {
 
-    public Handler handler = new Handler();
-    public Runnable sendAlertRunnable;
-    public static final int PERMISSION_REQUEST_CODE = 100;
-    public static final int ABORT_WINDOW_MILLIS = 30000;
+    private final Handler handler = new Handler();
+    private Runnable sendAlertRunnable;
+    private static final int PERMISSION_REQUEST_CODE = 100;
+    private static final int ABORT_WINDOW_MILLIS = 30000;
 
 
     @Override
@@ -80,7 +79,7 @@ public class Sturzerkennung extends AppCompatActivity {
         }
     }
 
-    @SuppressLint("MissingPermission")
+
     private void sendEmergencySMS() {
 
         SharedPreferences prefs = getSharedPreferences("NotfallPrefs", MODE_PRIVATE);
@@ -105,6 +104,16 @@ public class Sturzerkennung extends AppCompatActivity {
 
         if (locationManager != null) {
             if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+                if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                    // TODO: Consider calling
+                    //    ActivityCompat#requestPermissions
+                    // here to request the missing permissions, and then overriding
+                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                    //                                          int[] grantResults)
+                    // to handle the case where the user grants the permission. See the documentation
+                    // for ActivityCompat#requestPermissions for more details.
+                    return;
+                }
                 location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
             }
             if (location == null && locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {

@@ -8,9 +8,8 @@ import androidx.room.PrimaryKey;
 public class Pflanzen {
     @PrimaryKey(autoGenerate = true)
     public int id;
-
     public String art;
-    public int level;
+
     public String nutzername;
 
     public int drawableId;
@@ -19,8 +18,6 @@ public class Pflanzen {
 
     public Pflanzen() {
     }
-
-    // Dein eigener Konstruktor
     @Ignore
     public Pflanzen(int drawableId, int x, int y) {
         this.drawableId = drawableId;

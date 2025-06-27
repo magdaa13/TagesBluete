@@ -28,8 +28,8 @@ import java.util.concurrent.TimeUnit;
 
 public class NeueAufgaben extends AppCompatActivity {
 
-    int aufgabeID = -1;
-    public Aufgabe bearbeiteteAufgabe = null;
+    private int aufgabeID = -1;
+    private Aufgabe bearbeiteteAufgabe = null;
 
 
     @Override
@@ -140,6 +140,7 @@ public class NeueAufgaben extends AppCompatActivity {
                 String datumUhrzeit = datum + " " + uhrzeit;
                 SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.GERMAN);
                 Date date = sdf.parse(datumUhrzeit);
+                assert date != null;
                 long triggerMillis = date.getTime();
 
                 WorkManager workManager = WorkManager.getInstance(getApplicationContext());

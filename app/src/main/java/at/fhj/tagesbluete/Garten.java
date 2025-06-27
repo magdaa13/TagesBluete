@@ -2,11 +2,8 @@ package at.fhj.tagesbluete;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.ScrollView;
-import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.room.Room;
@@ -18,12 +15,10 @@ import java.util.Random;
 public class Garten extends AppCompatActivity {
 
     private FrameLayout gartenHintergrund;
-    private int pflanzengroesse = 200;
-    private int abstandVomRand = 50;
-    private int pflanzenProErledigte = 2;
+    private final int pflanzengroesse = 200;
+    private final int abstandVomRand = 50;
     private final Random random = new Random();
 
-    private PflanzeDAO pflanzeDAO;
     private List<Pflanzen> blumenListe = new ArrayList<>();
 
     private int[] blumenBilder = {
@@ -47,11 +42,12 @@ public class Garten extends AppCompatActivity {
         gartenHintergrund = findViewById(R.id.gartenHintergrund);
 
         RoomDatenbank db = Room.databaseBuilder(getApplicationContext(), RoomDatenbank.class, "tagesbluete-db").allowMainThreadQueries().build();
-        pflanzeDAO = db.pflanzeDAO();
+        PflanzeDAO pflanzeDAO = db.pflanzeDAO();
 
         SharedPreferences prefs = getSharedPreferences("TagesBluetePrefs", MODE_PRIVATE);
         String nutzername = prefs.getString("nutzername", "StandardUser");
         int erledigte = prefs.getInt("erledigte_gesamt", 0);
+        int pflanzenProErledigte = 2;
         int pflanzenAnzahl = erledigte / pflanzenProErledigte;
 
         blumenListe = pflanzeDAO.getAllePflanzen(nutzername);
@@ -117,7 +113,7 @@ public class Garten extends AppCompatActivity {
         return abstandVomRand + new Random().nextInt(Math.max(1, hoehe - pflanzengroesse - abstandVomRand));
     }
 
-    public void zeigeStartPopUp() {
+    private void zeigeStartPopUp() {
         String[] nachrichten = {
                 "Erledige deine Aufgaben – und sieh zu, wie dein Garten erblüht!",
                 "Ein schöner Garten wächst mit deinen Erfolgen!",

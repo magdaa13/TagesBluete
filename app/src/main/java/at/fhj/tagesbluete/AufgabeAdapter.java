@@ -18,10 +18,10 @@ import java.util.Set;
 
 
 public class AufgabeAdapter extends RecyclerView.Adapter<AufgabeAdapter.AufgabeViewHolder> {
-    public List<Aufgabe> aufgabeListe;
-    public Set<Integer> selectedPosition = new HashSet<>();
+    private List<Aufgabe> aufgabeListe;
+    private final Set<Integer> selectedPosition = new HashSet<>();
     private OnItemClickListener listener;
-    public Context context;
+    private Context context;
     public interface OnItemClickListener {
         void onItemClick(Aufgabe aufgabe, int position);
     }
@@ -88,14 +88,18 @@ public class AufgabeAdapter extends RecyclerView.Adapter<AufgabeAdapter.AufgabeV
         });
     }
 
-    public void markiereAusgewählteAlsErledigt(){
+    public List<Aufgabe> markiereAusgewählteAlsErledigt(){
+        List<Aufgabe>neuErledigte = new ArrayList<>();
         for(Integer pos : selectedPosition){
             Aufgabe aufgabe = aufgabeListe.get(pos);
-            aufgabe.erledigt = true;
-
-            RoomDatenbank.getInstance(context).aufgabeDao().updateAll(aufgabe);
+            if(!aufgabe.erledigt){
+                aufgabe.erledigt = true;
+                RoomDatenbank.getInstance(context).aufgabeDao().updateAll(aufgabe);
+                neuErledigte.add(aufgabe);
+            }
         }
         clearSelection();
+        return neuErledigte;
     }
 
     @Override

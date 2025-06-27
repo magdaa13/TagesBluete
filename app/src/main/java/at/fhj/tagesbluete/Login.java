@@ -16,7 +16,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class Login extends AppCompatActivity {
-    public BenutzerDAO userDao;
+    private BenutzerDAO userDao;
     private ExecutorService executor = Executors.newSingleThreadExecutor();
 
     @Override

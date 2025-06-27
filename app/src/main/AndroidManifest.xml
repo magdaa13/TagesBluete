@@ -23,10 +23,8 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/app_icon"
         android:supportsRtl="true"
-        android:theme="@style/Theme.TagesBluete"
-        tools:targetApi="31">
+        android:theme="@style/Theme.TagesBluete">
 
-        <!-- Activities -->
         <activity android:name=".Sturzerkennung" android:exported="false" />
         <activity android:name=".Garten" android:exported="false" />
         <activity android:name=".Notfallkontakt" android:exported="false" />
@@ -42,13 +40,11 @@
             </intent-filter>
         </activity>
 
-        <!-- Service -->
         <service
             android:name=".SensorService"
             android:foregroundServiceType="health"
             android:exported="false" />
 
-        <!-- BootReceiver -->
         <receiver
             android:name=".BootReceiver"
             android:enabled="true"

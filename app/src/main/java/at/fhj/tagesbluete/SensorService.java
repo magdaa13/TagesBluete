@@ -21,11 +21,9 @@ import androidx.core.app.NotificationCompat;
 public class SensorService extends Service implements SensorEventListener {
 
     private SensorManager sensorManager;
-    private Sensor accelerometer;
-    private Sensor motionSensor;
-
     private long lastMovementTime = System.currentTimeMillis();
-    private static final long INACTIVITY_THRESHOLD = 1000 * 60 * 60 * 3; // 3 Stunden
+    private static final long INACTIVITY_THRESHOLD = 1000 * 60 * 60 * 3; // 3 Stunden keine Aktivität
+    private final Handler inactivityHandler = new Handler(Looper.getMainLooper());
     private static final String CHANNEL_ID = "SturzerkennungsServiceChannel";
 
     @Override
@@ -35,8 +33,8 @@ public class SensorService extends Service implements SensorEventListener {
         startForeground(1, buildForegroundNotification());
 
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-        accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-        motionSensor = sensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
+        Sensor accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        Sensor motionSensor = sensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
 
         if (accelerometer != null) {
             sensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_NORMAL);
@@ -44,6 +42,7 @@ public class SensorService extends Service implements SensorEventListener {
         if (motionSensor != null) {
             sensorManager.registerListener(this, motionSensor, SensorManager.SENSOR_DELAY_NORMAL);
         }
+        inactivityHandler.post(inactivityCheckRunnable);
     }
 
     @Override
@@ -55,6 +54,7 @@ public class SensorService extends Service implements SensorEventListener {
     public void onDestroy() {
         super.onDestroy();
         sensorManager.unregisterListener(this);
+        inactivityHandler.removeCallbacks(inactivityCheckRunnable);
     }
 
     @Override
@@ -88,11 +88,6 @@ public class SensorService extends Service implements SensorEventListener {
             lastMovementTime = currentTime;
             inactivityNotified = false;
         }
-
-        if (!inactivityNotified && currentTime - lastMovementTime > INACTIVITY_THRESHOLD) {
-            inactivityNotified = true;
-            showInactivityReminderNotification();
-        }
     }
 
     private void showInactivityReminderNotification() {
@@ -114,6 +109,18 @@ public class SensorService extends Service implements SensorEventListener {
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.notify((int) System.currentTimeMillis(), builder.build());
     }
+
+    private Runnable inactivityCheckRunnable = new Runnable() {
+        @Override
+        public void run() {
+            long currentTime = System.currentTimeMillis();
+            if (!inactivityNotified && currentTime - lastMovementTime > INACTIVITY_THRESHOLD) {
+                inactivityNotified = true;
+                showInactivityReminderNotification();
+            }
+            inactivityHandler.postDelayed(this, 15 * 60 * 1000); //alle 15 Minuten wird überprüft
+        }
+    };
 
     private void triggerFallDetected() {
         new Handler(Looper.getMainLooper()).post(() -> {
@@ -154,11 +161,11 @@ public class SensorService extends Service implements SensorEventListener {
 
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
-        // Nicht benötigt
+
     }
 
     @Override
     public IBinder onBind(Intent intent) {
-        return null; // Kein Binding
+        return null;
     }
 }

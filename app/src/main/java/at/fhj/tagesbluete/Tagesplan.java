@@ -27,10 +27,9 @@ import java.util.Random;
 
 public class Tagesplan extends AppCompatActivity {
 
-    public List<Aufgabe> aufgabenListe;
-    public AufgabeAdapter adapter;
-    public RoomDatenbank db;
-    public RecyclerView recyclerView;
+    private AufgabeAdapter adapter;
+    private RoomDatenbank db;
+    private RecyclerView recyclerView;
 
 
     @Override
@@ -105,8 +104,8 @@ public class Tagesplan extends AppCompatActivity {
                 return;
             }
 
-            adapter.markiereAusgewählteAlsErledigt();
-            for(int i = 0; i<ausgewählteAufgaben.size();i++){
+            List<Aufgabe> neuErledigte = adapter.markiereAusgewählteAlsErledigt();
+            for(int i = 0; i<neuErledigte.size();i++){
                 speichereFortschrittUndBelohne();
             }
 
@@ -145,7 +144,7 @@ public class Tagesplan extends AppCompatActivity {
         }
     }
 
-    public List<Aufgabe>filterAufgabenFürHeute(List<Aufgabe> alleAufgaben){
+    private List<Aufgabe>filterAufgabenFürHeute(List<Aufgabe> alleAufgaben){
         List<Aufgabe>result = new ArrayList<>();
 
         SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy", Locale.GERMAN);
@@ -183,7 +182,7 @@ public class Tagesplan extends AppCompatActivity {
         }
         return result;
     }
-    public boolean belohneMitPflanze(int erledigteGesamt){
+    private boolean belohneMitPflanze(int erledigteGesamt){
         SharedPreferences prefs = getSharedPreferences("TagesBluetePrefs", MODE_PRIVATE);
         String nutzername = prefs.getString("nutzername","");
         PflanzeDAO pflanzeDAO = db.pflanzeDAO();
@@ -192,15 +191,6 @@ public class Tagesplan extends AppCompatActivity {
 
         boolean neuePflanzeFreigeschaltet = false;
 
-        if(erledigteGesamt % 5 == 0 && !alle.isEmpty()){
-            for(Pflanzen p : alle){
-                if(p.level < 2){
-                    p.level++;
-                    pflanzeDAO.update(p);
-                    break;
-                }
-            }
-        }
 
         if(erledigteGesamt % 2 == 0){
             String [] arten = {"rose", "tulpe", "sonnenblume"};
@@ -208,7 +198,6 @@ public class Tagesplan extends AppCompatActivity {
 
             Pflanzen neue = new Pflanzen();
             neue.art=zufallsArt;
-            neue.level=0;
             neue.nutzername = nutzername;
 
             pflanzeDAO.insert(neue);
@@ -219,7 +208,7 @@ public class Tagesplan extends AppCompatActivity {
         return neuePflanzeFreigeschaltet;
 
     }
-    public void speichereFortschrittUndBelohne(){
+    private void speichereFortschrittUndBelohne(){
         SharedPreferences prefs = getSharedPreferences("TagesBluetePrefs", MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
 
@@ -234,11 +223,8 @@ public class Tagesplan extends AppCompatActivity {
         if(neuePflanze){
             zeigePflanzenFreischaltDialog();
         }
-
-
     }
-
-    public void zeigePflanzenFreischaltDialog() {
+    private void zeigePflanzenFreischaltDialog() {
         new androidx.appcompat.app.AlertDialog.Builder(this, androidx.appcompat.R.style.Theme_AppCompat_Light_Dialog_Alert)
                 .setTitle("Glückwunsch 🌱")
                 .setMessage("Du hast eine neue Pflanze freigeschaltet!\nSchau gleich in deinem Garten vorbei – er wird von Tag zu Tag schöner.")

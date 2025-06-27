@@ -19,7 +19,7 @@ import androidx.core.view.WindowInsetsCompat;
 
 public class Registrieren extends AppCompatActivity {
 
-    public BenutzerDAO benutzerDAO;
+    private BenutzerDAO benutzerDAO;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
