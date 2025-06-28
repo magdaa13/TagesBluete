@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -225,7 +226,7 @@ public class Tagesplan extends AppCompatActivity {
         }
     }
     private void zeigePflanzenFreischaltDialog() {
-        new androidx.appcompat.app.AlertDialog.Builder(this, androidx.appcompat.R.style.Theme_AppCompat_Light_Dialog_Alert)
+        new AlertDialog.Builder(this, android.R.style.Theme_Material_Light_Dialog_Alert)
                 .setTitle("Glückwunsch 🌱")
                 .setMessage("Du hast eine neue Pflanze freigeschaltet!\nSchau gleich in deinem Garten vorbei – er wird von Tag zu Tag schöner.")
                 .setPositiveButton("Super!", (dialog, which) -> dialog.dismiss())

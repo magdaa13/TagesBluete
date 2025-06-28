@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.room.Room;
 
@@ -125,7 +126,7 @@ public class Garten extends AppCompatActivity {
         String kompletterText = zufallsNachricht + "\n\nTipp: Wische nach unten, um den ganzen Garten zu sehen!";
 
 
-        new androidx.appcompat.app.AlertDialog.Builder(this, androidx.appcompat.R.style.Theme_AppCompat_Light_Dialog_Alert)
+        new AlertDialog.Builder(this, android.R.style.Theme_Material_Light_Dialog_Alert)
                 .setTitle("Willkommen im Garten 🌸")
                 .setMessage(kompletterText)
                 .setPositiveButton("Los geht's!", (dialog, which) -> dialog.dismiss())

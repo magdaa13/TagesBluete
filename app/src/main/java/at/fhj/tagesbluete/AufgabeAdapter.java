@@ -17,19 +17,44 @@ import java.util.List;
 import java.util.Set;
 
 
+/**
+ * Adapter für die RecyclerView-Anzeige von Aufgaben.
+ *
+ * Zeigt eine Liste von {@link Aufgabe}-Objekten an und ermöglicht die Auswahl
+ * und Markierung als erledigt.
+ */
+
 public class AufgabeAdapter extends RecyclerView.Adapter<AufgabeAdapter.AufgabeViewHolder> {
     private List<Aufgabe> aufgabeListe;
     private final Set<Integer> selectedPosition = new HashSet<>();
     private OnItemClickListener listener;
     private Context context;
+
+
+    /**
+     * Interface zur Behandlung von Klicks auf Aufgaben-Items.
+     */
     public interface OnItemClickListener {
         void onItemClick(Aufgabe aufgabe, int position);
     }
+    /**
+     * Konstruktor für den Adapter.
+     *
+     * @param context       der Kontext
+     * @param aufgabeListe  Liste der anzuzeigenden Aufgaben
+     * @param listener      Listener für Item-Klicks
+     */
     public AufgabeAdapter(Context context, List<Aufgabe> aufgabeListe, OnItemClickListener listener){
         this.context = context;
         this.aufgabeListe = aufgabeListe;
         this.listener = listener;
     }
+
+    /**
+     * Aktualisiert die Aufgabenliste.
+     *
+     * @param neueAufgaben neue Liste von Aufgaben
+     */
     public void setAufgabeListe(List<Aufgabe>neueAufgaben){
         this.aufgabeListe = neueAufgaben;
         notifyDataSetChanged();
@@ -48,6 +73,7 @@ public class AufgabeAdapter extends RecyclerView.Adapter<AufgabeAdapter.AufgabeV
 
         holder.titelView.setText(aufgabe.titel);
 
+        // Darstellung bei erledigter Aufgabe
         if(aufgabe.erledigt){
             holder.titelView.setPaintFlags(holder.titelView.getPaintFlags()| Paint.STRIKE_THRU_TEXT_FLAG);
             holder.titelView.setAlpha(0.5f);
@@ -55,7 +81,7 @@ public class AufgabeAdapter extends RecyclerView.Adapter<AufgabeAdapter.AufgabeV
             holder.titelView.setPaintFlags(holder.titelView.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
             holder.titelView.setAlpha(1f);
         }
-
+        // Checkbox Zustand setzen
         holder.checkBox.setOnCheckedChangeListener(null);
         holder.checkBox.setChecked(selectedPosition.contains(position));
 
@@ -88,6 +114,11 @@ public class AufgabeAdapter extends RecyclerView.Adapter<AufgabeAdapter.AufgabeV
         });
     }
 
+    /**
+     * Markiert alle aktuell ausgewählten Aufgaben als erledigt.
+     *
+     * @return Liste der neu als erledigt markierten Aufgaben
+     */
     public List<Aufgabe> markiereAusgewählteAlsErledigt(){
         List<Aufgabe>neuErledigte = new ArrayList<>();
         for(Integer pos : selectedPosition){
@@ -107,8 +138,11 @@ public class AufgabeAdapter extends RecyclerView.Adapter<AufgabeAdapter.AufgabeV
         return aufgabeListe.size();
     }
 
-    //für Mehrfachauswahl
-    public List<Aufgabe> getSelectedAufgaben(){
+    /**
+     * Gibt alle aktuell ausgewählten Aufgaben zurück.
+     *
+     * @return Liste der ausgewählten Aufgaben
+     */    public List<Aufgabe> getSelectedAufgaben(){
         List<Aufgabe> ausgewählte = new ArrayList<>();
         for(Integer pos : selectedPosition){
             if(pos < aufgabeListe.size()){
@@ -118,11 +152,18 @@ public class AufgabeAdapter extends RecyclerView.Adapter<AufgabeAdapter.AufgabeV
         return ausgewählte;
     }
 
+    /**
+     * Entfernt alle aktuellen Auswahlen.
+     */
     public void clearSelection(){
         selectedPosition.clear();
         notifyDataSetChanged();
     }
 
+
+    /**
+     * ViewHolder für eine einzelne Aufgabenansicht im RecyclerView.
+     */
     public static class AufgabeViewHolder extends RecyclerView.ViewHolder {
         TextView titelView;
         CheckBox checkBox;

@@ -11,18 +11,37 @@ import androidx.annotation.NonNull;
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 import androidx.core.app.NotificationCompat;
-
+/**
+ * Eine Worker-Klasse, die regelmäßig Benachrichtigungen für fällige Aufgaben sendet.
+ * Sie wird von WorkManager geplant und ausgeführt.
+ * Die Benachrichtigung enthält einen motivierenden Titel, die Aufgabe und öffnet beim Tippen den Tagesplan.
+ */
 public class AufgabenBenachrichtigung extends Worker {
 
+
+    /**
+     * Konstruktor für den Worker.
+     *
+     * @param context Anwendungskontext
+     * @param params  Worker-spezifische Parameter, z. B. übergebene Eingabedaten
+     */
     public AufgabenBenachrichtigung(@NonNull Context context, @NonNull WorkerParameters params){
         super(context,params);
     }
+    /**
+     * Führt die Hintergrundarbeit aus: Sendet eine Aufgaben-Benachrichtigung mit zufälligem Titel.
+     *
+     * @return {@link Result#success()} bei erfolgreicher Ausführung
+     */
     @NonNull
     @Override
     public Result doWork() {
+        // Titel der fälligen Aufgabe aus den InputData extrahieren
         String titel = getInputData().getString("titel");
 
         Context context = getApplicationContext();
+
+        // Intent zum Öffnen der Tagesplan-Activity bei Klick auf die Benachrichtigung
         Intent i = new Intent(context, Tagesplan.class);
         i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, i, PendingIntent.FLAG_IMMUTABLE);
@@ -38,7 +57,7 @@ public class AufgabenBenachrichtigung extends Worker {
             );
             manager.createNotificationChannel(channel);
         }
-
+        // Auswahl eines zufälligen, motivierenden Titels
         String[] titelAlternativen = {
                 "Hallo! Wie geht es dir?\uD83C\uDF40",
                 "Hallo! Zeit für eine Aufgabe! \uD83D\uDD56",

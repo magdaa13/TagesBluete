@@ -17,18 +17,21 @@ public abstract class RoomDatenbank extends RoomDatabase {
 
     public static synchronized RoomDatenbank getInstance(Context context) {
         if (instance == null) {
-            Builder<RoomDatenbank> userDatabase = Room.databaseBuilder(
-                    context.getApplicationContext(),
-                    RoomDatenbank.class,
-                    "user_database"
-            );
-            userDatabase.fallbackToDestructiveMigration();
-            userDatabase.allowMainThreadQueries();
-            instance = userDatabase
+            // Hier wird die Datenbank gebaut, wenn instance noch null ist
+            instance = Room.databaseBuilder(
+                            context.getApplicationContext(),
+                            RoomDatenbank.class,
+                            "user_database"
+                    )
+                    .fallbackToDestructiveMigration()  // Löscht DB bei Versionswechsel
+                    .allowMainThreadQueries()          // Nur zu Testzwecken! Nicht in Produktiv-Apps empfohlen
                     .build();
         }
         return instance;
     }
+
+
+
 
 
 }

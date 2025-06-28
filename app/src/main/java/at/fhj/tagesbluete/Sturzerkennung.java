@@ -19,14 +19,32 @@ import androidx.core.app.ActivityCompat;
 
 import android.os.Handler;
 
+/**
+ * Die Activity zur Erkennung von Stürzen in der App "TagesBlüte".
+ * Nach dem Aufruf wird ein 30-Sekunden-Countdown gestartet, in dem der Nutzer den Notruf abbrechen kann.
+ * Wird der Countdown nicht abgebrochen, wird automatisch eine SMS mit dem aktuellen Standort
+ * an die gespeicherte Notfallkontaktperson gesendet.
+ */
+
 public class Sturzerkennung extends AppCompatActivity {
 
+    /** Handler für den zeitverzögerten SMS-Versand */
     private final Handler handler = new Handler();
+    /** Runnable, das den Notruf (SMS) auslöst */
+
     private Runnable sendAlertRunnable;
+    /** Anfragecode für Berechtigungen */
+
     private static final int PERMISSION_REQUEST_CODE = 100;
+    /** Zeitfenster in Millisekunden, in dem der Alarm abgebrochen werden kann (30 Sekunden) */
+
     private static final int ABORT_WINDOW_MILLIS = 30000;
 
 
+    /**
+     * Initialisiert die Activity, startet bei vorhandenen Berechtigungen den Countdown,
+     * oder fordert sie andernfalls an.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,11 +67,20 @@ public class Sturzerkennung extends AppCompatActivity {
         }
     }
 
+    /**
+     * Prüft, ob SMS- und Standort-Berechtigungen erteilt wurden.
+     *
+     * @return true, wenn beide Berechtigungen vorhanden sind
+     */
     private boolean hasPermissions() {
         return ActivityCompat.checkSelfPermission(this, Manifest.permission.SEND_SMS) == PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
     }
 
+
+    /**
+     * Fordert die erforderlichen Berechtigungen (SMS, Standort) an.
+     */
     private void requestPermissions() {
         ActivityCompat.requestPermissions(this, new String[]{
                 Manifest.permission.SEND_SMS,
@@ -61,10 +88,16 @@ public class Sturzerkennung extends AppCompatActivity {
         }, PERMISSION_REQUEST_CODE);
     }
 
+    /**
+     * Startet den 30-sekündigen Countdown bis zum automatischen SMS-Versand.
+     */
     private void startCountdown() {
         handler.postDelayed(sendAlertRunnable, ABORT_WINDOW_MILLIS); // 30 Sekunden Zeit zum Abbrechen
     }
 
+    /**
+     * Wird aufgerufen, wenn der Benutzer die Berechtigungsabfrage beantwortet.
+     */
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
@@ -79,7 +112,11 @@ public class Sturzerkennung extends AppCompatActivity {
         }
     }
 
-
+    /**
+     * Sendet eine Notfall-SMS mit aktuellem Standort an die hinterlegte Notfallnummer.
+     * Die Daten werden aus SharedPreferences geladen.
+     * Wenn keine Notfallnummer vorhanden ist oder ein Fehler auftritt, wird dies angezeigt.
+     */
     private void sendEmergencySMS() {
 
         SharedPreferences prefs = getSharedPreferences("NotfallPrefs", MODE_PRIVATE);

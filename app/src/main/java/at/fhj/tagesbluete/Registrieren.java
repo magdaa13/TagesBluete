@@ -17,15 +17,38 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+/**
+ * Die {@code Registrieren}-Activity erlaubt es neuen Benutzer:innen,
+ * sich in der App zu registrieren. Dabei werden Benutzername und Passwort erfasst,
+ * validiert und in der Datenbank gespeichert.
+ *
+ * <p>Nach erfolgreicher Registrierung wird gefragt, ob die Benutzer:in dauerhaft
+ * eingeloggt bleiben möchte. Die Entscheidung wird in den
+ * {@link SharedPreferences} gespeichert.</p>
+ *
+ */
+
 public class Registrieren extends AppCompatActivity {
 
+    /**
+     * DAO für Datenbankzugriff auf Benutzer-Daten.
+     */
     private BenutzerDAO benutzerDAO;
+
+    /**
+     * Wird aufgerufen, wenn die Activity erstellt wird.
+     * Initialisiert UI-Komponenten und setzt die Logik für die Registrierung.
+     *
+     * @param savedInstanceState gespeicherter Zustand (bei Re-Init), kann {@code null} sein.
+     */
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_registrieren);
+
+        // Setzt korrekte Padding-Werte für das Layout bei Einblendung von Systemleisten
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.register_layout), ((v, insets) ->
         { Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
@@ -39,11 +62,13 @@ public class Registrieren extends AppCompatActivity {
 
         benutzerDAO = RoomDatenbank.getInstance(getApplicationContext()).userDao();
 
+        //Registrierung bei Klick auf Button starten
         bestätigenReg.setOnClickListener(v -> {
             String username = benutzernameReg.getText().toString().trim();
             String password = passwortReg.getText().toString().trim();
             String passwordRepeat = passwortWhReg.getText().toString().trim();
 
+            //Validierung der Eingaben
             if(username.isEmpty() || password.isEmpty() || passwordRepeat.isEmpty()){
                 Toast.makeText(Registrieren.this, "Bitte alle Felder ausfüllen!", Toast.LENGTH_SHORT).show();
                 return;
@@ -60,12 +85,14 @@ public class Registrieren extends AppCompatActivity {
                 return;
             }
 
+            // Benutzerobjekt erstellen und in DB speichern
             Benutzer neuerBenutzer = new Benutzer();
             neuerBenutzer.benutzername = username;
             neuerBenutzer.passwort = password;
 
             benutzerDAO.insert(neuerBenutzer);
 
+            // Initiale Speicherung des Benutzernamens
             SharedPreferences prefs = getSharedPreferences("TagesBluetePrefs", Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = prefs.edit();
             editor.putString("nutzername", username);
@@ -74,8 +101,9 @@ public class Registrieren extends AppCompatActivity {
 
             Toast.makeText(Registrieren.this, "Registrierung erfolgreich!", Toast.LENGTH_SHORT).show();
 
+            //Dialog "Eingeloggt bleiben?"
             runOnUiThread(() -> {
-                new AlertDialog.Builder(Registrieren.this, androidx.appcompat.R.style.Theme_AppCompat_Light_Dialog_Alert)
+                new AlertDialog.Builder(this, android.R.style.Theme_Material_Light_Dialog_Alert)
                         .setTitle("Eingeloggt bleiben?")
                         .setMessage("Möchtest du dauerhaft eingeloggt bleiben? Das reduziert die Anzahl der Anmeldungen.")
                         .setPositiveButton("Ja", (dialog, which) -> {

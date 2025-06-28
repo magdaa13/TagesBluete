@@ -1,6 +1,5 @@
 package at.fhj.tagesbluete;
 
-
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.SharedPreferences;
@@ -25,23 +24,53 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
-
+/**
+ * Activity zur Erstellung und Bearbeitung von Aufgaben mit Datum, Uhrzeit und Wiederholungsoption.
+ *
+ * <p>Diese Activity ermöglicht dem Nutzer das Anlegen neuer Aufgaben oder das Bearbeiten bestehender Aufgaben.
+ * Aufgaben können einen Titel, ein Datum, eine Uhrzeit und eine Wiederholung (einmalig, täglich, wöchentlich) haben.</p>
+ *
+ * <p>Beim Speichern wird eine Benachrichtigung für die Aufgabe mit Hilfe von WorkManager geplant.
+ * Für wiederkehrende Aufgaben wird ein periodischer WorkRequest erstellt, für einmalige Aufgaben ein OneTimeWorkRequest.</p>
+ *
+ * <p>Die Nutzerdaten werden aus SharedPreferences gelesen, um die Aufgabe einem Nutzer zuzuordnen.</p>
+ *
+ * <p>Datum und Uhrzeit werden über Dialoge zur Eingabe bereitgestellt.</p>
+ */
 public class NeueAufgaben extends AppCompatActivity {
 
+    /**
+     * ID der Aufgabe, die bearbeitet wird. -1 wenn keine Bearbeitung, sondern neue Aufgabe.
+     */
     private int aufgabeID = -1;
+
+    /**
+     * Die Aufgabe, die gerade bearbeitet wird (null wenn neu).
+     */
     private Aufgabe bearbeiteteAufgabe = null;
 
-
+    /**
+     * Lifecycle-Methode, in der das Layout gesetzt und UI-Elemente initialisiert werden.
+     *
+     * <p>Hier werden Eingabefelder, Spinner und Buttons verbunden, Datum- und Zeit-Picker
+     * geöffnet sowie bestehende Aufgaben geladen (Bearbeitungsmodus).</p>
+     *
+     * <p>Beim Klick auf den Speichern-Button werden die Eingaben validiert, eine neue Aufgabe
+     * gespeichert oder eine bestehende aktualisiert und eine passende WorkManager-Aufgabe
+     * für Benachrichtigungen geplant.</p>
+     *
+     * @param savedInstanceState Bundled State der vorherigen Instanz (falls vorhanden)
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_neue_aufgaben);
+
         RoomDatenbank db = RoomDatenbank.getInstance(getApplicationContext());
 
         SharedPreferences prefs = getSharedPreferences("TagesBluetePrefs", MODE_PRIVATE);
-        String eingeloggterNutzername = prefs.getString("nutzername", "");  // Fallback: leerer String
-
+        String eingeloggterNutzername = prefs.getString("nutzername", "");
 
         EditText TextTitel = findViewById(R.id.input_titel);
         EditText TextDatum = findViewById(R.id.input_datum);
@@ -49,7 +78,7 @@ public class NeueAufgaben extends AppCompatActivity {
         Spinner SpinnerWH = findViewById(R.id.spinner_wiederholung);
         Button buttonHinzufügen = findViewById(R.id.button_hinzufuegen);
 
-        ArrayAdapter<CharSequence>adapter = ArrayAdapter.createFromResource(
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
                 this,
                 R.array.wiederholungsoption,
                 android.R.layout.simple_spinner_item);
@@ -57,6 +86,7 @@ public class NeueAufgaben extends AppCompatActivity {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         SpinnerWH.setAdapter(adapter);
 
+        // Öffnet DatePickerDialog bei Klick auf das Datum-Eingabefeld
         TextDatum.setOnClickListener(v -> {
             final Calendar calendar = Calendar.getInstance();
             int jahr = calendar.get(Calendar.YEAR);
@@ -64,13 +94,13 @@ public class NeueAufgaben extends AppCompatActivity {
             int tag = calendar.get(Calendar.DAY_OF_MONTH);
 
             DatePickerDialog datePickerDialog = new DatePickerDialog(NeueAufgaben.this, (view, year, month, day) -> {
-                String datumStr = String.format(Locale.GERMAN,"%02d.%02d.%04d", day, month + 1, year);
+                String datumStr = String.format(Locale.GERMAN, "%02d.%02d.%04d", day, month + 1, year);
                 TextDatum.setText(datumStr);
             }, jahr, monat, tag);
             datePickerDialog.show();
-
         });
 
+        // Öffnet TimePickerDialog bei Klick auf das Uhrzeit-Eingabefeld
         TextUhrzeit.setOnClickListener(v -> {
             final Calendar calendar = Calendar.getInstance();
             int stunde = calendar.get(Calendar.HOUR_OF_DAY);
@@ -79,12 +109,11 @@ public class NeueAufgaben extends AppCompatActivity {
             TimePickerDialog timePickerDialog = new TimePickerDialog(NeueAufgaben.this, (view, stunde1, minute1) -> {
                 String uhrzeitStr = String.format(Locale.GERMAN, "%02d:%02d", stunde1, minute1);
                 TextUhrzeit.setText(uhrzeitStr);
-            }, stunde, minute, true); // true für 24-Stunden-Format
+            }, stunde, minute, true);
             timePickerDialog.show();
-
         });
 
-        // Prüfen ob Bearbeitungsmodus
+        // Prüfen, ob Bearbeitungsmodus (Aufgabe bearbeiten statt neu anlegen)
         aufgabeID = getIntent().getIntExtra("aufgabe_id", -1);
         if (aufgabeID != -1) {
             bearbeiteteAufgabe = db.aufgabeDao().findById(aufgabeID);
@@ -98,12 +127,14 @@ public class NeueAufgaben extends AppCompatActivity {
             }
         }
 
+        // Listener für den Speichern-Button
         buttonHinzufügen.setOnClickListener(v -> {
             String titel = TextTitel.getText().toString().trim();
             String datum = TextDatum.getText().toString().trim();
             String uhrzeit = TextUhrzeit.getText().toString().trim();
             String wiederholung = SpinnerWH.getSelectedItem().toString();
 
+            // Validierung der Eingaben
             if (titel.isEmpty() || datum.isEmpty() || uhrzeit.isEmpty()) {
                 Toast.makeText(NeueAufgaben.this, "Bitte alle Felder ausfüllen", Toast.LENGTH_SHORT).show();
                 return;
@@ -111,18 +142,18 @@ public class NeueAufgaben extends AppCompatActivity {
 
             Aufgabe aktuelleAufgabe;
             if (aufgabeID != -1 && bearbeiteteAufgabe != null) {
-                // BEARBEITUNG
+                // Bearbeitung bestehender Aufgabe
                 bearbeiteteAufgabe.titel = titel;
                 bearbeiteteAufgabe.datum = datum;
                 bearbeiteteAufgabe.uhrzeit = uhrzeit;
                 bearbeiteteAufgabe.wiederholung = wiederholung;
-                bearbeiteteAufgabe.nutzername = eingeloggterNutzername; //Nutzerzuordnung
+                bearbeiteteAufgabe.nutzername = eingeloggterNutzername;
 
                 db.aufgabeDao().update(bearbeiteteAufgabe);
                 aktuelleAufgabe = bearbeiteteAufgabe;
                 Toast.makeText(NeueAufgaben.this, "Aufgabe wurde aktualisiert!", Toast.LENGTH_SHORT).show();
             } else {
-                // Neu anlegen
+                // Neue Aufgabe anlegen
                 Aufgabe neueAufgabe = new Aufgabe();
                 neueAufgabe.titel = titel;
                 neueAufgabe.datum = datum;
@@ -130,12 +161,13 @@ public class NeueAufgaben extends AppCompatActivity {
                 neueAufgabe.wiederholung = wiederholung;
                 neueAufgabe.nutzername = eingeloggterNutzername;
 
-               long neueId = db.aufgabeDao().insert(neueAufgabe);
-               neueAufgabe.id = (int)neueId;
-               aktuelleAufgabe = neueAufgabe;
+                long neueId = db.aufgabeDao().insert(neueAufgabe);
+                neueAufgabe.id = (int) neueId;
+                aktuelleAufgabe = neueAufgabe;
                 Toast.makeText(NeueAufgaben.this, "Aufgabe wurde gespeichert!", Toast.LENGTH_SHORT).show();
             }
 
+            // Planung der Benachrichtigung via WorkManager
             try {
                 String datumUhrzeit = datum + " " + uhrzeit;
                 SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.GERMAN);
@@ -152,21 +184,23 @@ public class NeueAufgaben extends AppCompatActivity {
 
                 long now = System.currentTimeMillis();
                 long delay = triggerMillis - now;
-                if(delay < 0) delay = 0;
+                if (delay < 0) delay = 0;
 
-                if(wiederholung.equals("Einmalig")){
+                if (wiederholung.equals("Einmalig")) {
+                    // Einmalige Benachrichtigung
                     OneTimeWorkRequest workRequest = new OneTimeWorkRequest.Builder(AufgabenBenachrichtigung.class)
                             .setInitialDelay(delay, TimeUnit.MILLISECONDS)
                             .setInputData(inputData)
                             .build();
 
                     workManager.enqueue(workRequest);
-                }else{
+                } else {
+                    // Periodische Benachrichtigung (täglich oder wöchentlich)
                     long interval;
-                    if(wiederholung.equals("Täglich")){
+                    if (wiederholung.equals("Täglich")) {
                         interval = TimeUnit.DAYS.toMillis(1);
-                    }else{
-                        interval =TimeUnit.DAYS.toMillis(7);
+                    } else {
+                        interval = TimeUnit.DAYS.toMillis(7);
                     }
 
                     PeriodicWorkRequest periodicWorkRequest = new PeriodicWorkRequest.Builder(
@@ -178,14 +212,14 @@ public class NeueAufgaben extends AppCompatActivity {
 
                     String uniqueWorkName = "aufgabe_" + aktuelleAufgabe.id;
 
-                    workManager.enqueueUniquePeriodicWork(uniqueWorkName, ExistingPeriodicWorkPolicy.REPLACE,periodicWorkRequest
-                    );
+                    workManager.enqueueUniquePeriodicWork(uniqueWorkName, ExistingPeriodicWorkPolicy.REPLACE, periodicWorkRequest);
                 }
 
             } catch (Exception e) {
                 e.printStackTrace();
             }
 
+            // Activity beenden und zurückkehren
             finish();
         });
     }
