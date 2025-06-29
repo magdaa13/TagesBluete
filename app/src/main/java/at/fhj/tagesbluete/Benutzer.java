@@ -5,7 +5,6 @@ import androidx.room.PrimaryKey;
 
 /**
  * Repräsentiert einen Benutzer in der Room-Datenbank.
- *
  * Jeder Benutzer hat eine eindeutige ID, einen Benutzernamen und ein Passwort.
  */
 @Entity

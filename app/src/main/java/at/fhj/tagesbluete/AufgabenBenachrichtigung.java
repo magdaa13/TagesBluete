@@ -21,9 +21,8 @@ public class AufgabenBenachrichtigung extends Worker {
 
     /**
      * Konstruktor für den Worker.
-     *
-     * @param context Anwendungskontext
-     * @param params  Worker-spezifische Parameter, z. B. übergebene Eingabedaten
+     * @param context ist Anwendungskontext
+     * @param params ist Worker-spezifische Parameter, z.B. übergebene Eingabedaten
      */
     public AufgabenBenachrichtigung(@NonNull Context context, @NonNull WorkerParameters params){
         super(context,params);
@@ -31,7 +30,7 @@ public class AufgabenBenachrichtigung extends Worker {
     /**
      * Führt die Hintergrundarbeit aus: Sendet eine Aufgaben-Benachrichtigung mit zufälligem Titel.
      *
-     * @return {@link Result#success()} bei erfolgreicher Ausführung
+     * @return Result.success bei erfolgreicher Ausführung
      */
     @NonNull
     @Override

@@ -11,7 +11,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 /**
  * Diese Activity ermöglicht es dem Benutzer, einen Notfallkontakt zu speichern und zu verwalten.
- * Der Kontakt wird in den {@link SharedPreferences} gespeichert und kann bei Bedarf bearbeitet werden.
+ * Der Kontakt wird in den SharedPreferences gespeichert und kann bei Bedarf bearbeitet werden.
  * Zusätzlich wird eine Vorschau der automatisierten Notfallnachricht angezeigt.
  */
 
@@ -27,8 +27,6 @@ public class Notfallkontakt extends AppCompatActivity {
     /**
      * Wird aufgerufen, wenn die Activity erstellt wird.
      * Initialisiert die Eingabefelder und lädt gespeicherte Daten, falls vorhanden.
-     *
-     * @param savedInstanceState Zustand der Activity beim Wiederherstellen (nicht verwendet).
      */
 
     @Override

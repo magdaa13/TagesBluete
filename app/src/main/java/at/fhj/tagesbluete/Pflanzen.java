@@ -4,7 +4,7 @@ import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 /**
- * Repräsentiert eine Pflanze im virtuellen Garten der App "TagesBlüte".
+ * Repräsentiert eine Pflanze im virtuellen Garten.
  * Diese Entity wird in einer Room-Datenbank gespeichert und enthält Informationen
  * über die Pflanzenart, Position im Garten sowie die zugehörige Nutzerkennung.
  */
@@ -30,7 +30,7 @@ public class Pflanzen {
 
     /**
      * Konstruktor zum Erstellen einer Pflanze mit Bild und Position.
-     * Wird z. B. verwendet, um neue Pflanzen temporär zu erstellen, ohne sie sofort zu speichern.
+     * Wird z.B. verwendet, um neue Pflanzen temporär zu erstellen, ohne sie sofort zu speichern.
      *
      * @param drawableId Drawable-ID der Pflanze
      * @param x X-Koordinate im Garten

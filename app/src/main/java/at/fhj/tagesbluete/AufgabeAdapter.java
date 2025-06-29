@@ -19,8 +19,7 @@ import java.util.Set;
 
 /**
  * Adapter für die RecyclerView-Anzeige von Aufgaben.
- *
- * Zeigt eine Liste von {@link Aufgabe}-Objekten an und ermöglicht die Auswahl
+ * Zeigt eine Liste von Aufgabe-Objekten an und ermöglicht die Auswahl
  * und Markierung als erledigt.
  */
 
@@ -39,10 +38,9 @@ public class AufgabeAdapter extends RecyclerView.Adapter<AufgabeAdapter.AufgabeV
     }
     /**
      * Konstruktor für den Adapter.
-     *
-     * @param context       der Kontext
-     * @param aufgabeListe  Liste der anzuzeigenden Aufgaben
-     * @param listener      Listener für Item-Klicks
+     * @param context ist der Kontext
+     * @param aufgabeListe Liste der anzuzeigenden Aufgaben
+     * @param listener Listener für Item-Klicks
      */
     public AufgabeAdapter(Context context, List<Aufgabe> aufgabeListe, OnItemClickListener listener){
         this.context = context;
@@ -52,7 +50,6 @@ public class AufgabeAdapter extends RecyclerView.Adapter<AufgabeAdapter.AufgabeV
 
     /**
      * Aktualisiert die Aufgabenliste.
-     *
      * @param neueAufgaben neue Liste von Aufgaben
      */
     public void setAufgabeListe(List<Aufgabe>neueAufgaben){
@@ -116,7 +113,6 @@ public class AufgabeAdapter extends RecyclerView.Adapter<AufgabeAdapter.AufgabeV
 
     /**
      * Markiert alle aktuell ausgewählten Aufgaben als erledigt.
-     *
      * @return Liste der neu als erledigt markierten Aufgaben
      */
     public List<Aufgabe> markiereAusgewählteAlsErledigt(){
@@ -140,7 +136,6 @@ public class AufgabeAdapter extends RecyclerView.Adapter<AufgabeAdapter.AufgabeV
 
     /**
      * Gibt alle aktuell ausgewählten Aufgaben zurück.
-     *
      * @return Liste der ausgewählten Aufgaben
      */    public List<Aufgabe> getSelectedAufgaben(){
         List<Aufgabe> ausgewählte = new ArrayList<>();

@@ -24,7 +24,7 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.Priority;
 
 /**
- * Die Activity zur Erkennung von Stürzen in der App "TagesBlüte".
+ * Hier zur Erkennung von Stürzen.
  * Nach dem Aufruf wird ein 30-Sekunden-Countdown gestartet, in dem der Nutzer eine Notruf-SMS abbrechen kann.
  * Wird der Countdown nicht abgebrochen, wird automatisch eine SMS mit dem aktuellen Standort
  * an die gespeicherte Notfallkontaktperson gesendet.
@@ -83,7 +83,7 @@ public class Sturzerkennung extends AppCompatActivity {
 
 
     /**
-     * Fordert die erforderlichen Berechtigungen (SMS, Standort) an.
+     * Fordert die erforderlichen Berechtigungen (SMS,Standort) an.
      */
     private void requestPermissions() {
         ActivityCompat.requestPermissions(this, new String[]{
@@ -124,7 +124,7 @@ public class Sturzerkennung extends AppCompatActivity {
     /**
      * Sendet eine Notfall-SMS mit aktuellem Standort an die hinterlegte Notfallnummer.
      * Die Daten werden aus SharedPreferences geladen.
-     * Wenn keine Notfallnummer vorhanden ist oder ein Fehler auftritt, wird dies angezeigt.
+     * Wenn keine Notfallnummer vorhanden ist oder ein Fehler auftritt, wird dies als Toast angezeigt.
      */
     @SuppressLint("MissingPermission")
     private void sendEmergencySMS() {
@@ -147,7 +147,7 @@ public class Sturzerkennung extends AppCompatActivity {
         fusedLocationProviderClient.getCurrentLocation(Priority.PRIORITY_HIGH_ACCURACY, null)
                 .addOnSuccessListener(location -> {
                     if (location != null) {
-                        Log.d("Sturzerkennung", "getCurrentLocation erfolgreich: " + location.getLatitude() + ", " + location.getLongitude());
+                        Log.d("Sturzerkennung", "getCurrentLocation erfolgreich: " + location.getLatitude() + ", " + location.getLongitude()); //zur Überprüfung
                         String standortText = "https://maps.google.com/?q=" + location.getLatitude() + "," + location.getLongitude();
                         sendSms(nummer, nachricht + standortText);
                     } else {
@@ -159,7 +159,6 @@ public class Sturzerkennung extends AppCompatActivity {
                                         String standortText = "https://maps.google.com/?q=" + lastLocation.getLatitude() + "," + lastLocation.getLongitude();
                                         sendSms(nummer, nachricht + standortText);
                                     } else {
-                                        Log.w("Sturzerkennung", "getLastLocation war auch null.");
                                         sendSms(nummer, nachricht + "nicht verfügbar");
                                     }
                                 })
@@ -179,8 +178,8 @@ public class Sturzerkennung extends AppCompatActivity {
      * Sendet eine SMS mit dem übergebenen Nachrichtentext an die angegebene Telefonnummer.
      * Bei Erfolg wird eine Bestätigung angezeigt. Bei Fehlern wird eine Fehlermeldung geloggt und angezeigt.
      *
-     * @param nummer   Die Telefonnummer des Empfängers.
-     * @param nachricht Der zu sendende Nachrichtentext, inkl. ggf. Standortinformation.
+     * @param nummer ist die Telefonnummer des Empfängers.
+     * @param nachricht ist der zu sendende Nachrichtentext, inkl. ggf. Standortinformation.
      */
     private void sendSms(String nummer, String nachricht) {
         try {

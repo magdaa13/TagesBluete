@@ -28,7 +28,7 @@ import java.util.concurrent.TimeUnit;
  * Activity zur Erstellung und Bearbeitung von Aufgaben mit Datum, Uhrzeit und Wiederholungsoption.
  *
  * <p>Diese Activity ermöglicht dem Nutzer das Anlegen neuer Aufgaben oder das Bearbeiten bestehender Aufgaben.
- * Aufgaben können einen Titel, ein Datum, eine Uhrzeit und eine Wiederholung (einmalig, täglich, wöchentlich) haben.</p>
+ * Aufgaben können einen Titel, ein Datum,  eine Uhrzeit und eine Wiederholung (einmalig, täglich, wöchentlich) haben.</p>
  *
  * <p>Beim Speichern wird eine Benachrichtigung für die Aufgabe mit Hilfe von WorkManager geplant.
  * Für wiederkehrende Aufgaben wird ein periodischer WorkRequest erstellt, für einmalige Aufgaben ein OneTimeWorkRequest.</p>
@@ -50,16 +50,14 @@ public class NeueAufgaben extends AppCompatActivity {
     private Aufgabe bearbeiteteAufgabe = null;
 
     /**
-     * Lifecycle-Methode, in der das Layout gesetzt und UI-Elemente initialisiert werden.
+     * Methode, in der das Layout gesetzt und UI-Elemente initialisiert werden.
      *
      * <p>Hier werden Eingabefelder, Spinner und Buttons verbunden, Datum- und Zeit-Picker
      * geöffnet sowie bestehende Aufgaben geladen (Bearbeitungsmodus).</p>
      *
-     * <p>Beim Klick auf den Speichern-Button werden die Eingaben validiert, eine neue Aufgabe
+     * <p>Beim Klick auf den Speichern-Button werden die Eingaben überprüft, eine neue Aufgabe
      * gespeichert oder eine bestehende aktualisiert und eine passende WorkManager-Aufgabe
      * für Benachrichtigungen geplant.</p>
-     *
-     * @param savedInstanceState Bundled State der vorherigen Instanz (falls vorhanden)
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -123,7 +121,7 @@ public class NeueAufgaben extends AppCompatActivity {
                 TextUhrzeit.setText(bearbeiteteAufgabe.uhrzeit);
                 int spinnerPosition = adapter.getPosition(bearbeiteteAufgabe.wiederholung);
                 SpinnerWH.setSelection(spinnerPosition);
-                buttonHinzufügen.setText("Änderung speichern");
+                buttonHinzufügen.setText(R.string.aenderung_speichern);
             }
         }
 

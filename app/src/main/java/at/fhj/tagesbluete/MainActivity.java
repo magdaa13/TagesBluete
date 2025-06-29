@@ -20,12 +20,12 @@ import androidx.core.view.WindowInsetsCompat;
 /**
  * Haupt-Activity der App "TagesBlüte".
  *
- * <p>Diese Activity ist der Einstiegspunkt der App. Sie prüft,
+ * Diese Activity ist der Einstiegspunkt der App. Sie prüft,
  * ob der Nutzer bereits eingeloggt ist und leitet ggf. weiter.
  * Außerdem werden notwendige Berechtigungen für SMS, Standort,
- * Activity Recognition und Benachrichtigungen abgefragt.</p>
- *
- * <p>Ist der Nutzer nicht eingeloggt, werden Buttons zum Login
+ * Activity Recognition und Benachrichtigungen abgefragt.
+ * <p>
+ * Ist der Nutzer nicht eingeloggt, werden Buttons zum Login
  * und zur Registrierung angezeigt.</p>
  *
  * <p>Wenn alle benötigten Berechtigungen vorhanden sind,
@@ -47,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
 
-        // Padding für Systemleisten setzen (Edge-to-Edge Design)
+        // Padding für Systemleisten setzen
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main_layout), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);

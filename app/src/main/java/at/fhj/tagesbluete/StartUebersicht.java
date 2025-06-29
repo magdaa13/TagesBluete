@@ -15,7 +15,7 @@ import java.util.Date;
 import java.util.Locale;
 
 /**
- * Die Startübersicht der App "TagesBlüte".
+ * Das ist die Startübersicht der App.
  * Von hier aus gelangt man zu den Hauptfunktionen: Tagesplan, Garten, Notfallkontakt und Logout.
  * Zusätzlich wird das aktuelle Datum angezeigt.
  */

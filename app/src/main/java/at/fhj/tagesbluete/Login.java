@@ -16,14 +16,14 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 /**
- * Die {@code Login}-Activity ermöglicht es Benutzer:innen, sich mit einem Benutzernamen
- * und Passwort in die App einzuloggen. Bei erfolgreichem Login kann ausgewählt werden,
+ * Die Login-Activity ermöglicht es Benutzer:innen, sich mit einem Benutzernamen
+ * und Passwort in die App einzuloggen. Bei erfolgreichem Login kann auch ausgewählt werden,
  * ob man dauerhaft eingeloggt bleiben möchte.
  *
- * <p>Die Zugangsdaten werden über das {@link BenutzerDAO} aus der Room-Datenbank
+ * Die Zugangsdaten werden über das BenutzerDAO aus der Room-Datenbank
  * abgefragt. Bei erfolgreichem Login wird der Benutzername in den
- * {@link SharedPreferences} gespeichert. Zusätzlich kann die Option
- * "eingeloggt bleiben" gesetzt werden.</p>
+ * SharedPreferences gespeichert. Zusätzlich kann die Option
+ * "eingeloggt bleiben" gesetzt werden.
  *
  */
 
@@ -41,7 +41,7 @@ public class Login extends AppCompatActivity {
      * Wird aufgerufen, wenn die Activity erstellt wird.
      * Initialisiert UI-Komponenten und setzt den Login-Listener.
      *
-     * @param savedInstanceState gespeicherter Zustand (bei Re-Init), kann null sein.
+     * @param savedInstanceState gespeicherter Zustand, kann null sein.
      */
 
     @Override

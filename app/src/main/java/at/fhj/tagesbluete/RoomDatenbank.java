@@ -30,7 +30,7 @@ public abstract class RoomDatenbank extends RoomDatabase {
     public abstract PflanzeDAO pflanzeDAO();
 
     /**
-     * Gibt eine Singleton-Instanz der Room-Datenbank zurück.
+     * Gibt eine Instanz der Room-Datenbank zurück.
      *
      * @param context Anwendungskontext
      * @return Instanz von RoomDatenbank
@@ -44,7 +44,7 @@ public abstract class RoomDatenbank extends RoomDatabase {
                             "user_database"
                     )
                     .fallbackToDestructiveMigration()  // Löscht DB bei Versionswechsel
-                    .allowMainThreadQueries()          // Nur zu Testzwecken! Nicht in Produktiv-Apps empfohlen
+                    .allowMainThreadQueries()
                     .build();
         }
         return instance;

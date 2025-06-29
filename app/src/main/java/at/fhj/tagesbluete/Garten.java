@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Random;
 /**
  * Die Garten-Aktivität zeigt einen virtuellen Garten mit Blumen an.
- * Je mehr Aufgaben erledigt wurden, desto mehr Blumen erscheinen im Garten.
+ * Je mehr Aufgaben erledigt wurden, desto mehr Blumen erscheinen im Garten und der Garten wächst.
  */
 public class Garten extends AppCompatActivity {
 
@@ -80,7 +80,7 @@ public class Garten extends AppCompatActivity {
 
     /**
      * Generiert eine neue Pflanze mit zufälliger Position.
-     * @param nutzername Name des Nutzers, dem die Pflanze gehört
+     * @param nutzername ist der name des Nutzers, dem die Pflanze gehört
      * @return Neue Pflanzen-Instanz
      */
     private Pflanzen generiereNeueBlume(String nutzername) {
@@ -131,7 +131,7 @@ public class Garten extends AppCompatActivity {
         return abstandVomRand + new Random().nextInt(Math.max(1, breite - pflanzengroesse - abstandVomRand));
     }
 
-    /** @return Zufällige Y-Koordinate mit Scrollpuffer */
+    /** @return Zufällige Y-Koordinate mit Scroll */
     private int generiereZufallY() {
         int hoehe = getResources().getDisplayMetrics().heightPixels * 3; // für Scrollview mehr Platz nach unten
         return abstandVomRand + new Random().nextInt(Math.max(1, hoehe - pflanzengroesse - abstandVomRand));

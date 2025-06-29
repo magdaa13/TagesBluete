@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -18,13 +17,13 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 /**
- * Die {@code Registrieren}-Activity erlaubt es neuen Benutzer:innen,
+ * Die Registrieren-Activity erlaubt es neuen Benutzer:innen,
  * sich in der App zu registrieren. Dabei werden Benutzername und Passwort erfasst,
  * validiert und in der Datenbank gespeichert.
  *
  * <p>Nach erfolgreicher Registrierung wird gefragt, ob die Benutzer:in dauerhaft
  * eingeloggt bleiben möchte. Die Entscheidung wird in den
- * {@link SharedPreferences} gespeichert.</p>
+ * SharedPreferences gespeichert.</p>
  *
  */
 
@@ -39,7 +38,7 @@ public class Registrieren extends AppCompatActivity {
      * Wird aufgerufen, wenn die Activity erstellt wird.
      * Initialisiert UI-Komponenten und setzt die Logik für die Registrierung.
      *
-     * @param savedInstanceState gespeicherter Zustand (bei Re-Init), kann {@code null} sein.
+     * @param savedInstanceState gespeicherter Zustand, kann null sein.
      */
 
     @Override

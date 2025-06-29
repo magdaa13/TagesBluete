@@ -24,7 +24,7 @@ import java.util.Locale;
 import java.util.List;
 import java.util.Random;
 /**
- * Die Activity zur Verwaltung des Tagesplans.
+ * Zur Verwaltung des Tagesplans.
  * Nutzer können Aufgaben hinzufügen, bearbeiten, erledigen und löschen.
  * Erledigte Aufgaben werden gezählt und belohnen am 10 erledigten Aufgaben mit einer Pflanze.
  */
@@ -178,11 +178,11 @@ public class Tagesplan extends AppCompatActivity {
         Date heute = new Date();
         Calendar heuteCal = Calendar.getInstance();
         heuteCal.setTime(heute);
-        int heuteWochentag = heuteCal.get(Calendar.DAY_OF_WEEK); // 1=Sonntag ... 7=Samstag
+        int heuteWochentag = heuteCal.get(Calendar.DAY_OF_WEEK);
 
         for (Aufgabe a : alleAufgaben) {
             try {
-                Date aufgabenDatum = sdf.parse(a.datum);  // a.datum als String in deinem Modell
+                Date aufgabenDatum = sdf.parse(a.datum);
 
                 if ("täglich".equals(a.wiederholung)) {
                     // Immer hinzufügen

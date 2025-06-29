@@ -9,8 +9,8 @@ import java.util.List;
 
 /**
  * Data Access Object (DAO) für die Tabelle "Pflanzen".
- *
- * <p>Diese Schnittstelle definiert die Datenbankoperationen für die Pflanzen-Entitäten,
+ * <p>
+ * Diese Schnittstelle definiert die Datenbankoperationen für die Pflanzen-Entitäten,
  * einschließlich Einfügen, Aktualisieren und Abfragen von Pflanzen, die einem bestimmten Nutzer gehören.</p>
  */
 @Dao
@@ -19,7 +19,7 @@ public interface PflanzeDAO {
     /**
      * Fügt eine neue Pflanze in die Datenbank ein.
      *
-     * @param pflanzen Die Pflanzen-Entität, die gespeichert werden soll.
+     * @param pflanzen ist die Pflanzen-Entität, die gespeichert werden soll.
      */
     @Insert
     void insert(Pflanzen pflanzen);
@@ -27,7 +27,7 @@ public interface PflanzeDAO {
     /**
      * Aktualisiert eine vorhandene Pflanze in der Datenbank.
      *
-     * @param pflanzen Die Pflanzen-Entität mit den aktualisierten Daten.
+     * @param pflanzen ist die Pflanzen-Entität mit den aktualisierten Daten.
      */
     @Update
     void update(Pflanzen pflanzen);
@@ -35,7 +35,7 @@ public interface PflanzeDAO {
     /**
      * Liefert alle Pflanzen, die zu einem bestimmten Nutzer gehören.
      *
-     * @param nutzername Der Nutzername, dessen Pflanzen abgerufen werden sollen.
+     * @param nutzername ist der Nutzername, dessen Pflanzen abgerufen werden sollen.
      * @return Liste aller Pflanzen des Nutzers.
      */
     @Query("SELECT * FROM Pflanzen WHERE nutzername = :nutzername")

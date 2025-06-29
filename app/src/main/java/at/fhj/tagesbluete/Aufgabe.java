@@ -5,7 +5,6 @@ import androidx.room.PrimaryKey;
 
 /**
  * Repräsentiert eine Aufgabe in der Datenbank.
- *
  * Jede Aufgabe hat einen eindeutigen Bezeichner, einen Titel, eine Beschreibung,
  * ein Datum, eine Uhrzeit, sowie Informationen zur Wiederholung und Erledigung.
  * Zusätzlich wird die Aufgabe einem bestimmten Nutzer zugeordnet.

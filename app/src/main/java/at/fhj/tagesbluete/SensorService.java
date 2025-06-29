@@ -35,7 +35,7 @@ public class SensorService extends Service implements SensorEventListener {
 
     /**
      * Zeitspanne in Millisekunden, nach der bei Inaktivität eine Erinnerung gesendet wird.
-     * Aktuell: 3 Stunden.
+     * In diesem Fall: 3 Stunden.
      */
     private static final long INACTIVITY_THRESHOLD = 1000 * 60 * 60 * 3; // 3 Stunden keine Aktivität
 
@@ -96,15 +96,16 @@ public class SensorService extends Service implements SensorEventListener {
 
     /**
      * Überprüft Beschleunigung auf Anzeichen eines Sturzes.
+     * Gemessen über den Beschleunigungssensor.
      */
-    private void detectFall(SensorEvent event) {
-        float x = event.values[0];
-        float y = event.values[1];
-        float z = event.values[2];
-        double acceleration = Math.sqrt(x * x + y * y + z * z);
+    private void detectFall(SensorEvent event) {//drei Achsen-Werte des Beschleuningungssensors ausgelesen
+        float x = event.values[0]; //links/rechts-Bewegung
+        float y = event.values[1]; //vorwärts/rückwerts-Bewegung
+        float z = event.values[2]; //hoch/runter-Bewegung
+        double acceleration = Math.sqrt(x * x + y * y + z * z); //Gesamtbeschleunigung
 
-        if (acceleration > 25) { // Schwelle für Sturz
-            triggerFallDetected();
+        if (acceleration > 25) { // Schwelle für Sturz, also Gesamtbeschleunigung über 25 m/s2
+            triggerFallDetected(); //ungewöhnlich starkes Bewegungsmuster erkannt
         }
     }
 
