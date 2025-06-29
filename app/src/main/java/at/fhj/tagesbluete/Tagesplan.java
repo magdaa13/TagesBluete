@@ -223,12 +223,12 @@ public class Tagesplan extends AppCompatActivity {
 
         boolean neuePflanzeFreigeschaltet = false;
 
-        if(erledigteGesamt % 2 == 0){
-            String [] arten = {"rose", "tulpe", "sonnenblume"};
-            String zufallsArt = arten[new Random().nextInt(arten.length)];
+        if(erledigteGesamt % 10 == 0){
+            int [] bilder = Garten.blumenBilder;
+            int zufallsBild = bilder[new Random().nextInt(bilder.length)];
 
             Pflanzen neue = new Pflanzen();
-            neue.art=zufallsArt;
+            neue.art = zufallsBild;
             neue.nutzername = nutzername;
 
             pflanzeDAO.insert(neue);

@@ -42,7 +42,10 @@ public class Notfallkontakt extends AppCompatActivity {
         inputVerhaeltnis = findViewById(R.id.input_verhaeltnis);
         inputTelefonnummer = findViewById(R.id.input_telefonnummer);
         textNachrichtvorschau = findViewById(R.id.text_nachrichtvorschau);
-        prefs = getSharedPreferences("NotfallPrefs",MODE_PRIVATE);
+        SharedPreferences globalPrefs = getSharedPreferences("TagesBluetePrefs", MODE_PRIVATE);
+        String aktuellerNutzer = globalPrefs.getString("nutzername", "default");
+        prefs = getSharedPreferences("NotfallPrefs_" + aktuellerNutzer, MODE_PRIVATE);
+
 
         ladeKontakt();
 

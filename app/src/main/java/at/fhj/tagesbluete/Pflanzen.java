@@ -15,7 +15,7 @@ public class Pflanzen {
      */
     @PrimaryKey(autoGenerate = true)
     public int id;
-    public String art;
+    public int art;
 
     public String nutzername;
     public int drawableId;

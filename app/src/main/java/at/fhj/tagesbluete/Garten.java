@@ -34,7 +34,7 @@ public class Garten extends AppCompatActivity {
     private List<Pflanzen> blumenListe = new ArrayList<>();
 
     /** Array mit Ressourcen-IDs der möglichen Blumenbilder */
-    private int[] blumenBilder = {
+    public static final int[] blumenBilder = {
             R.drawable.flowerblue,
             R.drawable.flowerblue2,
             R.drawable.flowergray,
@@ -60,7 +60,7 @@ public class Garten extends AppCompatActivity {
         SharedPreferences prefs = getSharedPreferences("TagesBluetePrefs", MODE_PRIVATE);
         String nutzername = prefs.getString("nutzername", "StandardUser");
         int erledigte = prefs.getInt("erledigte_gesamt", 0);
-        int pflanzenProErledigte = 2;
+        int pflanzenProErledigte = 10;
         int pflanzenAnzahl = erledigte / pflanzenProErledigte;
 
         blumenListe = pflanzeDAO.getAllePflanzen(nutzername);
