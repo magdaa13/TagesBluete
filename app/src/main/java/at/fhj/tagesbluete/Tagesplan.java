@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -21,18 +20,36 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
-import com.google.android.material.snackbar.Snackbar;
 
 import java.util.List;
 import java.util.Random;
-
+/**
+ * Die Activity zur Verwaltung des Tagesplans.
+ * Nutzer können Aufgaben hinzufügen, bearbeiten, erledigen und löschen.
+ * Erledigte Aufgaben werden gezählt und belohnen am 10 erledigten Aufgaben mit einer Pflanze.
+ */
 public class Tagesplan extends AppCompatActivity {
 
+    /**
+     * Adapter für die Anzeige der Aufgaben in der RecyclerView.
+     */
     private AufgabeAdapter adapter;
+
+    /**
+     * Zugriffspunkt auf die lokale Room-Datenbank.
+     */
     private RoomDatenbank db;
+
+    /**
+     * RecyclerView zur Darstellung der Aufgabenliste.
+     */
     private RecyclerView recyclerView;
 
-
+    /**
+     * Initialisiert die Activity, setzt die Layout-Elemente, lädt Aufgaben und
+     * definiert die Button-Klick-Listener für Aufgabenverwaltung.
+     * @param savedInstanceState vorheriger Status der Activity, falls vorhanden
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -126,6 +143,10 @@ public class Tagesplan extends AppCompatActivity {
         super.onResume();
         ladeAufgabenFuerHeute();
     }
+    /**
+     * Lädt alle Aufgaben für den heutigen Tag aus der Datenbank,
+     * filtert sie anhand der Wiederholungsregel und zeigt sie in der RecyclerView an.
+     */
     private void ladeAufgabenFuerHeute(){
         String heute = new SimpleDateFormat("dd.MM.yyyy", Locale.GERMAN).format(new Date());
 
@@ -145,6 +166,11 @@ public class Tagesplan extends AppCompatActivity {
         }
     }
 
+    /**
+     * Filtert Aufgaben anhand ihrer Wiederholungsregel (täglich, wöchentlich, kein).
+     * @param alleAufgaben Liste aller Aufgaben
+     * @return Liste der Aufgaben, die heute angezeigt werden sollen
+     */
     private List<Aufgabe>filterAufgabenFürHeute(List<Aufgabe> alleAufgaben){
         List<Aufgabe>result = new ArrayList<>();
 
@@ -183,15 +209,19 @@ public class Tagesplan extends AppCompatActivity {
         }
         return result;
     }
+
+    /**
+     * Prüft, ob basierend auf der Gesamtanzahl erledigter Aufgaben eine neue Pflanze
+     * freigeschaltet wird. Wenn ja, wird eine zufällige Pflanze eingefügt.
+     * @param erledigteGesamt Anzahl aller erledigten Aufgaben insgesamt
+     * @return true, wenn eine neue Pflanze freigeschaltet wurde, sonst false
+     */
     private boolean belohneMitPflanze(int erledigteGesamt){
         SharedPreferences prefs = getSharedPreferences("TagesBluetePrefs", MODE_PRIVATE);
         String nutzername = prefs.getString("nutzername","");
         PflanzeDAO pflanzeDAO = db.pflanzeDAO();
 
-        List<Pflanzen> alle = pflanzeDAO.getAllePflanzen(nutzername);
-
         boolean neuePflanzeFreigeschaltet = false;
-
 
         if(erledigteGesamt % 2 == 0){
             String [] arten = {"rose", "tulpe", "sonnenblume"};
@@ -209,6 +239,10 @@ public class Tagesplan extends AppCompatActivity {
         return neuePflanzeFreigeschaltet;
 
     }
+    /**
+     * Speichert den Fortschritt der erledigten Aufgaben und ruft
+     * die Belohnungsfunktion auf. Bei Freischaltung wird ein Dialog angezeigt.
+     */
     private void speichereFortschrittUndBelohne(){
         SharedPreferences prefs = getSharedPreferences("TagesBluetePrefs", MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
@@ -225,6 +259,9 @@ public class Tagesplan extends AppCompatActivity {
             zeigePflanzenFreischaltDialog();
         }
     }
+    /**
+     * Zeigt einen Dialog an, der den Nutzer über eine neue freigeschaltete Pflanze informiert.
+     */
     private void zeigePflanzenFreischaltDialog() {
         new AlertDialog.Builder(this, android.R.style.Theme_Material_Light_Dialog_Alert)
                 .setTitle("Glückwunsch 🌱")

@@ -7,8 +7,6 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.location.Location;
-import android.location.LocationManager;
 import android.os.Bundle;
 import android.telephony.SmsManager;
 import android.util.Log;
@@ -27,7 +25,7 @@ import com.google.android.gms.location.Priority;
 
 /**
  * Die Activity zur Erkennung von Stürzen in der App "TagesBlüte".
- * Nach dem Aufruf wird ein 30-Sekunden-Countdown gestartet, in dem der Nutzer den Notruf abbrechen kann.
+ * Nach dem Aufruf wird ein 30-Sekunden-Countdown gestartet, in dem der Nutzer eine Notruf-SMS abbrechen kann.
  * Wird der Countdown nicht abgebrochen, wird automatisch eine SMS mit dem aktuellen Standort
  * an die gespeicherte Notfallkontaktperson gesendet.
  */
@@ -36,14 +34,14 @@ public class Sturzerkennung extends AppCompatActivity {
 
     /** Handler für den zeitverzögerten SMS-Versand */
     private final Handler handler = new Handler();
+
     /** Runnable, das den Notruf (SMS) auslöst */
-
     private Runnable sendAlertRunnable;
+
     /** Anfragecode für Berechtigungen */
-
     private static final int PERMISSION_REQUEST_CODE = 100;
-    /** Zeitfenster in Millisekunden, in dem der Alarm abgebrochen werden kann (30 Sekunden) */
 
+    /** Zeitfenster in Millisekunden, in dem der Alarm abgebrochen werden kann (30 Sekunden) */
     private static final int ABORT_WINDOW_MILLIS = 30000;
 
 
@@ -177,6 +175,13 @@ public class Sturzerkennung extends AppCompatActivity {
                 });
     }
 
+    /**
+     * Sendet eine SMS mit dem übergebenen Nachrichtentext an die angegebene Telefonnummer.
+     * Bei Erfolg wird eine Bestätigung angezeigt. Bei Fehlern wird eine Fehlermeldung geloggt und angezeigt.
+     *
+     * @param nummer   Die Telefonnummer des Empfängers.
+     * @param nachricht Der zu sendende Nachrichtentext, inkl. ggf. Standortinformation.
+     */
     private void sendSms(String nummer, String nachricht) {
         try {
             SmsManager smsManager = SmsManager.getDefault();

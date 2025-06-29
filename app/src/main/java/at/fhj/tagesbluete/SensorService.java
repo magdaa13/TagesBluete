@@ -17,13 +17,36 @@ import android.os.IBinder;
 import android.os.Looper;
 
 import androidx.core.app.NotificationCompat;
-
+/**
+ * Service zur Sturzerkennung und Bewegungserinnerung.
+ * Läuft im Vordergrund mit Benachrichtigungen.
+ */
 public class SensorService extends Service implements SensorEventListener {
 
+    /**
+     * Verwalter für Zugriff auf Sensoren.
+     */
     private SensorManager sensorManager;
+
+    /**
+     * Zeitstempel der letzten erkannten Bewegung (in Millisekunden seit Systemstart).
+     */
     private long lastMovementTime = System.currentTimeMillis();
+
+    /**
+     * Zeitspanne in Millisekunden, nach der bei Inaktivität eine Erinnerung gesendet wird.
+     * Aktuell: 3 Stunden.
+     */
     private static final long INACTIVITY_THRESHOLD = 1000 * 60 * 60 * 3; // 3 Stunden keine Aktivität
+
+    /**
+     * Handler zur Überprüfung der Inaktivität im Haupt-Thread.
+     */
     private final Handler inactivityHandler = new Handler(Looper.getMainLooper());
+
+    /**
+     * ID des Benachrichtigungskanals für den Foreground-Service.
+     */
     private static final String CHANNEL_ID = "SturzerkennungsServiceChannel";
 
     @Override
@@ -66,8 +89,14 @@ public class SensorService extends Service implements SensorEventListener {
         }
     }
 
+    /**
+     * Flag zur Vermeidung mehrfacher Benachrichtigungen bei Inaktivität.
+     */
     private boolean inactivityNotified = false;
 
+    /**
+     * Überprüft Beschleunigung auf Anzeichen eines Sturzes.
+     */
     private void detectFall(SensorEvent event) {
         float x = event.values[0];
         float y = event.values[1];
@@ -79,6 +108,9 @@ public class SensorService extends Service implements SensorEventListener {
         }
     }
 
+    /**
+     * Überwacht Inaktivität über einen längeren Zeitraum.
+     */
     private void detectInactivity(SensorEvent event) {
         float movement = Math.abs(event.values[0]) + Math.abs(event.values[1]) + Math.abs(event.values[2]);
 
@@ -90,6 +122,7 @@ public class SensorService extends Service implements SensorEventListener {
         }
     }
 
+    /** Zeigt eine Erinnerung zur Bewegung bei längerer Inaktivität */
     private void showInactivityReminderNotification() {
         String[] messages = {
                 "Lust auf einen Spaziergang?",
@@ -110,6 +143,7 @@ public class SensorService extends Service implements SensorEventListener {
         notificationManager.notify((int) System.currentTimeMillis(), builder.build());
     }
 
+    /** Runnable zur regelmäßigen Überprüfung von Inaktivität */
     private Runnable inactivityCheckRunnable = new Runnable() {
         @Override
         public void run() {
@@ -122,6 +156,7 @@ public class SensorService extends Service implements SensorEventListener {
         }
     };
 
+    /** Startet die Aktivität zur Sturzerkennung */
     private void triggerFallDetected() {
         new Handler(Looper.getMainLooper()).post(() -> {
             Intent intent = new Intent(this, Sturzerkennung.class);
@@ -130,6 +165,7 @@ public class SensorService extends Service implements SensorEventListener {
         });
     }
 
+    /** Erstellt den Notification-Channel für Android O und höher */
     private void createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel serviceChannel = new NotificationChannel(
@@ -145,6 +181,10 @@ public class SensorService extends Service implements SensorEventListener {
         }
     }
 
+    /**
+     * Erstellt die Benachrichtigung für den laufenden Service.
+     * @return Notification-Objekt für den Vordergrunddienst
+     */
     private Notification buildForegroundNotification() {
         Intent notificationIntent = new Intent(this, MainActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0,

@@ -12,16 +12,28 @@ import androidx.room.Room;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-
+/**
+ * Die Garten-Aktivität zeigt einen virtuellen Garten mit Blumen an.
+ * Je mehr Aufgaben erledigt wurden, desto mehr Blumen erscheinen im Garten.
+ */
 public class Garten extends AppCompatActivity {
 
+    /** Hintergrund-Layout des Gartens */
     private FrameLayout gartenHintergrund;
+
+    /** Größe der Pflanzen-Icons in Pixel */
     private final int pflanzengroesse = 200;
+
+    /** Mindestabstand zwischen Pflanzen */
     private final int abstandVomRand = 50;
+
+    /** Zufallszahlengenerator für Pflanzen*/
     private final Random random = new Random();
 
+    /** Liste der im Garten angezeigten Pflanzen */
     private List<Pflanzen> blumenListe = new ArrayList<>();
 
+    /** Array mit Ressourcen-IDs der möglichen Blumenbilder */
     private int[] blumenBilder = {
             R.drawable.flowerblue,
             R.drawable.flowerblue2,
@@ -66,6 +78,11 @@ public class Garten extends AppCompatActivity {
         zeigeStartPopUp();
     }
 
+    /**
+     * Generiert eine neue Pflanze mit zufälliger Position.
+     * @param nutzername Name des Nutzers, dem die Pflanze gehört
+     * @return Neue Pflanzen-Instanz
+     */
     private Pflanzen generiereNeueBlume(String nutzername) {
         int drawableId = blumenBilder[random.nextInt(blumenBilder.length)];
 
@@ -92,6 +109,10 @@ public class Garten extends AppCompatActivity {
         return neue;
     }
 
+    /**
+     * Zeigt eine Pflanze visuell im Garten an.
+     * @param f Pflanzenobjekt, das dargestellt werden soll
+     */
     private void zeigeBlume(Pflanzen f) {
         ImageView pflanze = new ImageView(this);
         pflanze.setImageResource(f.drawableId);
@@ -104,16 +125,21 @@ public class Garten extends AppCompatActivity {
         gartenHintergrund.addView(pflanze);
     }
 
+    /** @return Zufällige X-Koordinate innerhalb des Bildschirms */
     private int generiereZufallX() {
         int breite = getResources().getDisplayMetrics().widthPixels;
         return abstandVomRand + new Random().nextInt(Math.max(1, breite - pflanzengroesse - abstandVomRand));
     }
 
+    /** @return Zufällige Y-Koordinate mit Scrollpuffer */
     private int generiereZufallY() {
         int hoehe = getResources().getDisplayMetrics().heightPixels * 3; // für Scrollview mehr Platz nach unten
         return abstandVomRand + new Random().nextInt(Math.max(1, hoehe - pflanzengroesse - abstandVomRand));
     }
 
+    /**
+     * Zeigt ein Willkommens-Popup mit einem zufälligen Motivationstext.
+     */
     private void zeigeStartPopUp() {
         String[] nachrichten = {
                 "Erledige deine Aufgaben – und sieh zu, wie dein Garten erblüht!",

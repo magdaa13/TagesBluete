@@ -18,7 +18,6 @@ public class Pflanzen {
     public String art;
 
     public String nutzername;
-
     public int drawableId;
     public int x;
     public int y;
