@@ -4,12 +4,14 @@ import androidx.annotation.NonNull;
 
 import android.Manifest;
 
+import android.annotation.SuppressLint;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.telephony.SmsManager;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -18,6 +20,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
 import android.os.Handler;
+
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.Priority;
 
 /**
  * Die Activity zur Erkennung von Stürzen in der App "TagesBlüte".
@@ -92,7 +98,12 @@ public class Sturzerkennung extends AppCompatActivity {
      * Startet den 30-sekündigen Countdown bis zum automatischen SMS-Versand.
      */
     private void startCountdown() {
-        handler.postDelayed(sendAlertRunnable, ABORT_WINDOW_MILLIS); // 30 Sekunden Zeit zum Abbrechen
+        Log.d("Sturzerkennung", "Countdown gestartet, SMS wird in 30 Sekunden gesendet wenn nicht abgebrochen");
+        handler.removeCallbacks(sendAlertRunnable);
+        handler.postDelayed(() -> {
+            Log.d("Sturzerkennung", "Timeout erreicht, sende SMS");
+            sendEmergencySMS();
+        }, ABORT_WINDOW_MILLIS);
     }
 
     /**
@@ -117,13 +128,9 @@ public class Sturzerkennung extends AppCompatActivity {
      * Die Daten werden aus SharedPreferences geladen.
      * Wenn keine Notfallnummer vorhanden ist oder ein Fehler auftritt, wird dies angezeigt.
      */
+    @SuppressLint("MissingPermission")
     private void sendEmergencySMS() {
-
         SharedPreferences prefs = getSharedPreferences("NotfallPrefs", MODE_PRIVATE);
-
-        String vorname = prefs.getString("vorname", "");
-        String nachname = prefs.getString("nachname", "");
-        String verhaeltnis = prefs.getString("verhaeltnis", "");
         String nummer = prefs.getString("nummer", "");
 
         if (nummer == null || nummer.isEmpty()) {
@@ -132,44 +139,55 @@ public class Sturzerkennung extends AppCompatActivity {
         }
 
         String nachricht = "Achtung! Ich hatte möglicherweise einen Sturz. Bitte kontaktiere mich und überprüfe, ob ich Hilfe benötige.\n\n" +
-                           "Diese Nachricht wurde automatisch von der App TagesBlüte gesendet.\n\n" +
-                           "Standort: ";
+                "Diese Nachricht wurde automatisch von der App TagesBlüte gesendet.\n\n" +
+                "Standort: ";
 
-        String standortText = "nicht verfügbar";
-        LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-        Location location = null;
+        FusedLocationProviderClient fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
 
-        if (locationManager != null) {
-            if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-                if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                    // TODO: Consider calling
-                    //    ActivityCompat#requestPermissions
-                    // here to request the missing permissions, and then overriding
-                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                    //                                          int[] grantResults)
-                    // to handle the case where the user grants the permission. See the documentation
-                    // for ActivityCompat#requestPermissions for more details.
-                    return;
-                }
-                location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-            }
-            if (location == null && locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
-                location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-            }
-        }
+        Log.d("Sturzerkennung", "Versuche getCurrentLocation()...");
 
-        if (location != null) {
-            standortText = "https://maps.google.com/?q=" + location.getLatitude() + "," + location.getLongitude();
-        }
+        fusedLocationProviderClient.getCurrentLocation(Priority.PRIORITY_HIGH_ACCURACY, null)
+                .addOnSuccessListener(location -> {
+                    if (location != null) {
+                        Log.d("Sturzerkennung", "getCurrentLocation erfolgreich: " + location.getLatitude() + ", " + location.getLongitude());
+                        String standortText = "https://maps.google.com/?q=" + location.getLatitude() + "," + location.getLongitude();
+                        sendSms(nummer, nachricht + standortText);
+                    } else {
+                        Log.w("Sturzerkennung", "getCurrentLocation war null, versuche getLastLocation...");
+                        fusedLocationProviderClient.getLastLocation()
+                                .addOnSuccessListener(lastLocation -> {
+                                    if (lastLocation != null) {
+                                        Log.d("Sturzerkennung", "getLastLocation erfolgreich: " + lastLocation.getLatitude() + ", " + lastLocation.getLongitude());
+                                        String standortText = "https://maps.google.com/?q=" + lastLocation.getLatitude() + "," + lastLocation.getLongitude();
+                                        sendSms(nummer, nachricht + standortText);
+                                    } else {
+                                        Log.w("Sturzerkennung", "getLastLocation war auch null.");
+                                        sendSms(nummer, nachricht + "nicht verfügbar");
+                                    }
+                                })
+                                .addOnFailureListener(e -> {
+                                    Log.e("Sturzerkennung", "getLastLocation fehlgeschlagen", e);
+                                    sendSms(nummer, nachricht + "nicht verfügbar");
+                                });
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("Sturzerkennung", "getCurrentLocation fehlgeschlagen", e);
+                    sendSms(nummer, nachricht + "nicht verfügbar");
+                });
+    }
 
-        String finalMessage = nachricht + standortText;
-
+    private void sendSms(String nummer, String nachricht) {
         try {
             SmsManager smsManager = SmsManager.getDefault();
-            smsManager.sendTextMessage(nummer, null, finalMessage, null, null);
-        }catch(Exception e){
-            Toast.makeText(this, "Fehler beim Senden der SMS: " + e.getMessage(), Toast.LENGTH_LONG).show();
+            smsManager.sendTextMessage(nummer, null, nachricht, null, null);
+            Toast.makeText(this, "Notfall-SMS gesendet!", Toast.LENGTH_LONG).show();
+            Log.d("Sturzerkennung", "SMS gesendet an " + nummer + ": " + nachricht);
+        } catch (Exception e) {
+            Toast.makeText(this, "Fehler beim SMS-Versand: " + e.getMessage(), Toast.LENGTH_LONG).show();
+            Log.e("Sturzerkennung", "SMS-Senden fehlgeschlagen", e);
         }
-    finish();
+        finish();
     }
+
 }
