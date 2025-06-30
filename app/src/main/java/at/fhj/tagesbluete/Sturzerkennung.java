@@ -55,7 +55,7 @@ public class Sturzerkennung extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_sturzerkennung);
 
-        sendAlertRunnable = this::sendEmergencySMS;
+        sendAlertRunnable = this::sendEmergencySMS; //Kurzschreibweise für Runnable
 
         Button cancelButton = findViewById(R.id.button_cancel);
         cancelButton.setOnClickListener(v -> {
@@ -128,7 +128,10 @@ public class Sturzerkennung extends AppCompatActivity {
      */
     @SuppressLint("MissingPermission")
     private void sendEmergencySMS() {
-        SharedPreferences prefs = getSharedPreferences("NotfallPrefs", MODE_PRIVATE);
+        SharedPreferences globalPrefs = getSharedPreferences("TagesBluetePrefs", MODE_PRIVATE);
+        String aktuellerNutzer = globalPrefs.getString("nutzername", "default");
+        SharedPreferences prefs = getSharedPreferences("NotfallPrefs_" + aktuellerNutzer, MODE_PRIVATE);
+
         String nummer = prefs.getString("nummer", "");
 
         if (nummer == null || nummer.isEmpty()) {
@@ -140,7 +143,7 @@ public class Sturzerkennung extends AppCompatActivity {
                 "Diese Nachricht wurde automatisch von der App TagesBlüte gesendet.\n\n" +
                 "Standort: ";
 
-        FusedLocationProviderClient fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
+        FusedLocationProviderClient fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this); //ruft Standortinformationen vom Gerät ab und liefert genauen Standort aus mehreren Quellen
 
         Log.d("Sturzerkennung", "Versuche getCurrentLocation()...");
 

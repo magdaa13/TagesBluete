@@ -66,14 +66,14 @@ public class Login extends AppCompatActivity {
                 Benutzer benutzer = userDao.login(inputBenutzer, inputPasswort);
 
                 //Dialog für "Eingeloggt bleiben?"
-                runOnUiThread(() -> {
+                runOnUiThread(() -> { //DB-Anfragen laufen im Hintergrund-Thread, UI-Elemente im UI-Thread
                     if (benutzer != null) {
                         SharedPreferences prefs = getSharedPreferences("TagesBluetePrefs", Context.MODE_PRIVATE);
                         SharedPreferences.Editor editor = prefs.edit();
                         editor.putString("nutzername", benutzer.benutzername);
                         editor.apply();
 
-                        new AlertDialog.Builder(Login.this)
+                        new AlertDialog.Builder(Login.this) //bietet dem Nutzer eine Entscheidung an
                                 .setTitle("Eingeloggt bleiben?")
                                 .setMessage("Möchtest du dauerhaft eingeloggt bleiben? Das reduziert die Anzahl der Anmeldungen.")
                                         .setPositiveButton("Ja", (dialog, which) -> {

@@ -65,7 +65,7 @@ public class NeueAufgaben extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_neue_aufgaben);
 
-        RoomDatenbank db = RoomDatenbank.getInstance(getApplicationContext());
+        RoomDatenbank db = RoomDatenbank.getInstance(getApplicationContext()); //Zugriff auf Datenbank
 
         SharedPreferences prefs = getSharedPreferences("TagesBluetePrefs", MODE_PRIVATE);
         String eingeloggterNutzername = prefs.getString("nutzername", "");
@@ -112,7 +112,7 @@ public class NeueAufgaben extends AppCompatActivity {
         });
 
         // Prüfen, ob Bearbeitungsmodus (Aufgabe bearbeiten statt neu anlegen)
-        aufgabeID = getIntent().getIntExtra("aufgabe_id", -1);
+        aufgabeID = getIntent().getIntExtra("aufgabe_id", -1); //wenn aufgabe_id übergeben, dann Bearbeiten, sonst neu erstellen
         if (aufgabeID != -1) {
             bearbeiteteAufgabe = db.aufgabeDao().findById(aufgabeID);
             if (bearbeiteteAufgabe != null) {
@@ -165,7 +165,7 @@ public class NeueAufgaben extends AppCompatActivity {
                 Toast.makeText(NeueAufgaben.this, "Aufgabe wurde gespeichert!", Toast.LENGTH_SHORT).show();
             }
 
-            // Planung der Benachrichtigung via WorkManager
+            // Planung der Benachrichtigung mit WorkManager
             try {
                 String datumUhrzeit = datum + " " + uhrzeit;
                 SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.GERMAN);
@@ -175,13 +175,13 @@ public class NeueAufgaben extends AppCompatActivity {
 
                 WorkManager workManager = WorkManager.getInstance(getApplicationContext());
 
-                Data inputData = new Data.Builder()
+                Data inputData = new Data.Builder() //Daten für Benachrichtigungsworker
                         .putString("titel", titel)
                         .putInt("id", aktuelleAufgabe.id)
                         .build();
 
                 long now = System.currentTimeMillis();
-                long delay = triggerMillis - now;
+                long delay = triggerMillis - now; //wie lange muss gewartet werden, bis Aufgabe fällig? negativ = sofort
                 if (delay < 0) delay = 0;
 
                 if (wiederholung.equals("Einmalig")) {

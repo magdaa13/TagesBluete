@@ -25,7 +25,7 @@ import java.util.Set;
 
 public class AufgabeAdapter extends RecyclerView.Adapter<AufgabeAdapter.AufgabeViewHolder> {
     private List<Aufgabe> aufgabeListe;
-    private final Set<Integer> selectedPosition = new HashSet<>();
+    private final Set<Integer> selectedPosition = new HashSet<>(); //Liste der ausgewählten Positionen
     private OnItemClickListener listener;
     private Context context;
 

@@ -33,7 +33,7 @@ import androidx.core.view.WindowInsetsCompat;
  */
 public class MainActivity extends AppCompatActivity {
 
-    private static final int PERMISSION_REQUEST_CODE = 100;
+    private static final int PERMISSION_REQUEST_CODE = 100; //ID für Unterscheidung verschiedeener Berechtigungsanfragen, nützlich bei mehreren Anfragen
 
     /**
      * Initialisiert die Activity, prüft Login-Status und Berechtigungen,
@@ -54,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
 
-        // Prüfen, ob Nutzer eingeloggt bleiben möchte
+        // Prüfen, ob Nutzer eingeloggt bleiben möchte mit Shared Preference, weil leichte und lokale Speicherung
         SharedPreferences prefs = getSharedPreferences("TagesBluetePrefs", Context.MODE_PRIVATE);
         boolean eingeloggtBleiben = prefs.getBoolean("eingeloggt_bleiben", false);
 
@@ -66,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
-        // Berechtigungen prüfen und ggf. anfragen
+        // Berechtigungen prüfen und ggf. anfragen z.B. SMS, Location
         if (hasRequiredPermissions()) {
             startSensorService();
         } else {
@@ -96,13 +96,13 @@ public class MainActivity extends AppCompatActivity {
     private boolean hasRequiredPermissions() {
         boolean smsPermission = ContextCompat.checkSelfPermission(this, Manifest.permission.SEND_SMS) == PackageManager.PERMISSION_GRANTED;
         boolean locationPermission = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
-        boolean activityRecognition = true; // Für Android < 10 standardmäßig true
-        boolean postNotifications = true;  // Für Android < 13 standardmäßig true
+        boolean activityRecognition = true; // Für Android < 10 /API 29 standardmäßig true
+        boolean postNotifications = true;  // Für Android < 13 /API 33 standardmäßig true
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) { //ältere Versionen stürzen nicht ab, weil sie Berechtigungen nicht kennen
             activityRecognition = ContextCompat.checkSelfPermission(this, Manifest.permission.ACTIVITY_RECOGNITION) == PackageManager.PERMISSION_GRANTED;
         }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) { // Android 13+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) { // Android 13+, weil die Berechtigungen in älteren Versionen nicht extistieren
             postNotifications = ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED;
         }
 
@@ -142,7 +142,7 @@ public class MainActivity extends AppCompatActivity {
      */
     private void startSensorService() {
         Intent serviceIntent = new Intent(this, SensorService.class);
-        ContextCompat.startForegroundService(this, serviceIntent);
+        ContextCompat.startForegroundService(this, serviceIntent); //Hintergrunddienst für die Sensorverfolgung
     }
 
     /**
@@ -166,7 +166,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
             if (allGranted) {
-                startSensorService();
+                startSensorService(); //nur wenn Nutzer den Berechtigungen zustimmt
             } else {
                 Toast.makeText(this, "Alle Berechtigungen werden benötigt!", Toast.LENGTH_LONG).show();
             }

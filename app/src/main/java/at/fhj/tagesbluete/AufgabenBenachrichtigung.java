@@ -66,7 +66,7 @@ public class AufgabenBenachrichtigung extends Worker {
                 "Bereit, etwas zu erreichen?\uD83C\uDF31"
         };
 
-        int zufallsIndex = (int) (Math.random() * titelAlternativen.length);
+        int zufallsIndex = (int) (Math.random() * titelAlternativen.length); //Ein Titel wird durch Zufall ausgewählt
         String zufallsTitel = titelAlternativen[zufallsIndex];
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, channelId)

@@ -43,11 +43,11 @@ public abstract class RoomDatenbank extends RoomDatabase {
                             RoomDatenbank.class,
                             "user_database"
                     )
-                    .fallbackToDestructiveMigration()  // Löscht DB bei Versionswechsel
-                    .allowMainThreadQueries()
+                    .fallbackToDestructiveMigration()  // Löscht alte DB und baut neue auf bei Versionswechsel, praktisch bei Entwicklung
+                    .allowMainThreadQueries() //erlaubt Datenbankzugriffe im Hauptthread (ok bei einfachen Apps)
                     .build();
         }
-        return instance;
+        return instance; //gibt fertige Datenbankinstanz zurück
     }
 
 

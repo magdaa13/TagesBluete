@@ -61,7 +61,7 @@ public class Garten extends AppCompatActivity {
         String nutzername = prefs.getString("nutzername", "StandardUser");
         int erledigte = prefs.getInt("erledigte_gesamt", 0);
         int pflanzenProErledigte = 10;
-        int pflanzenAnzahl = erledigte / pflanzenProErledigte;
+        int pflanzenAnzahl = erledigte / pflanzenProErledigte; // pro 10 erledigte Aufgaben wächst eine neue Pflanze
 
         blumenListe = pflanzeDAO.getAllePflanzen(nutzername);
 
@@ -84,7 +84,7 @@ public class Garten extends AppCompatActivity {
      * @return Neue Pflanzen-Instanz
      */
     private Pflanzen generiereNeueBlume(String nutzername) {
-        int drawableId = blumenBilder[random.nextInt(blumenBilder.length)];
+        int drawableId = blumenBilder[random.nextInt(blumenBilder.length)]; //wählt eine zufällige Pflanze im Array
 
         int x, y;
         boolean positionOk;
@@ -93,12 +93,12 @@ public class Garten extends AppCompatActivity {
             x = generiereZufallX();
             y = generiereZufallY();
 
-            for (Pflanzen p : blumenListe) {
+            for (Pflanzen p : blumenListe) { //Abstand zu den bestehenden Pflanzen prüfen
                 int dx = p.x - x;
                 int dy = p.y - y;
                 double abstand = Math.sqrt(dx * dx + dy * dy);
                 if (abstand < pflanzengroesse + abstandVomRand) {
-                    positionOk = false;
+                    positionOk = false; //Position nicht gültig
                     break;
                 }
             }
@@ -127,8 +127,8 @@ public class Garten extends AppCompatActivity {
 
     /** @return Zufällige X-Koordinate innerhalb des Bildschirms */
     private int generiereZufallX() {
-        int breite = getResources().getDisplayMetrics().widthPixels;
-        return abstandVomRand + new Random().nextInt(Math.max(1, breite - pflanzengroesse - abstandVomRand));
+        int breite = getResources().getDisplayMetrics().widthPixels; //ermittelt Breite des Bildschirms
+        return abstandVomRand + new Random().nextInt(Math.max(1, breite - pflanzengroesse - abstandVomRand)); //Pflanze nicht zu nah an Rand und innerhalb des sichtbaren Bereichs
     }
 
     /** @return Zufällige Y-Koordinate mit Scroll */

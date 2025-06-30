@@ -113,11 +113,11 @@ public class SensorService extends Service implements SensorEventListener {
      * Überwacht Inaktivität über einen längeren Zeitraum.
      */
     private void detectInactivity(SensorEvent event) {
-        float movement = Math.abs(event.values[0]) + Math.abs(event.values[1]) + Math.abs(event.values[2]);
+        float movement = Math.abs(event.values[0]) + Math.abs(event.values[1]) + Math.abs(event.values[2]);//3 Werte für Beschleunigung in X/Y/Z Richtung und Summe wird berechnet
 
-        long currentTime = System.currentTimeMillis();
+        long currentTime = System.currentTimeMillis(); //aktuelle Zeit
 
-        if (movement > 0.5f) {
+        if (movement > 0.5f) { //wenn Wert größer als 0.5 ist, Bewegung erkannt
             lastMovementTime = currentTime;
             inactivityNotified = false;
         }

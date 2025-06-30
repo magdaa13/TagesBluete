@@ -55,15 +55,15 @@ public class StartUebersicht extends AppCompatActivity {
             editor.apply();
 
             Intent intent = new Intent(StartUebersicht.this, MainActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK); //nach Logout wird neue Task gestartet und alle vorherigen entfernt, damit man nicht per Zurück-Button zurückkommt
             startActivity(intent);
-            finish();
+            finish(); //aktuelle Activity schließen
         });
 
         //Aktuelles Datum anzeigen
         TextView dateText = findViewById(R.id.text_date);
-        SimpleDateFormat sdf = new SimpleDateFormat("EEEE, d.M.yyyy", Locale.GERMAN);;
-        String currentDate = sdf.format(new Date());
-        dateText.setText(currentDate);
+        SimpleDateFormat sdf = new SimpleDateFormat("EEEE, d.M.yyyy", Locale.GERMAN); //formatiert ein Datum lesbar für den Menschen z.B. Montag, 1.1.2025 (Gebietsschema)
+        String currentDate = sdf.format(new Date()); //holt aktuelles Datum und Uhrzeit
+        dateText.setText(currentDate); //aktuelles Datum
     }
 }

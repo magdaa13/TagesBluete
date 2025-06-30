@@ -66,7 +66,7 @@ public class Tagesplan extends AppCompatActivity {
         Button buttonAufgabeHinzufügen = findViewById(R.id.button_neueaufgabe);
 
         buttonAufgabeLöschen.setOnClickListener(v -> {
-            List<Aufgabe> ausgewählteAufgaben = adapter.getSelectedAufgaben();
+            List<Aufgabe> ausgewählteAufgaben = adapter.getSelectedAufgaben(); //welche Aufgaben aktuell vom Benutzer ausgewählt
 
             if (ausgewählteAufgaben.isEmpty()) {
                 Toast.makeText(this, "Bitte erst eine Aufgabe auswählen", Toast.LENGTH_SHORT).show();
@@ -84,14 +84,14 @@ public class Tagesplan extends AppCompatActivity {
 
             AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
             if (alarmManager != null) {
-                alarmManager.cancel(pendingIntent); //
+                alarmManager.cancel(pendingIntent); //Falls Aufgabe gelöscht wird, wird geplanter Alarm abgebrochen
             }
 
             db.aufgabeDao().deleteById(aufgabe.id);
 }
             Toast.makeText(this, "Aufgabe gelöscht!", Toast.LENGTH_SHORT).show();
 
-            adapter.clearSelection();
+            adapter.clearSelection(); //Auswahl zurücksetzen nach Löschen
             ladeAufgabenFuerHeute();
         });
 
@@ -129,7 +129,7 @@ public class Tagesplan extends AppCompatActivity {
 
             Toast.makeText(this,"Aufgabe(n) erledigt!",Toast.LENGTH_SHORT).show();
 
-            adapter.clearSelection();
+            adapter.clearSelection(); //Auswahl zurücksetzen nach Erledigen
             ladeAufgabenFuerHeute();
         });
 
@@ -175,7 +175,7 @@ public class Tagesplan extends AppCompatActivity {
         List<Aufgabe>result = new ArrayList<>();
 
         SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy", Locale.GERMAN);
-        Date heute = new Date();
+        Date heute = new Date(); //aktueller Zeitpunkt
         Calendar heuteCal = Calendar.getInstance();
         heuteCal.setTime(heute);
         int heuteWochentag = heuteCal.get(Calendar.DAY_OF_WEEK);
@@ -185,8 +185,7 @@ public class Tagesplan extends AppCompatActivity {
                 Date aufgabenDatum = sdf.parse(a.datum);
 
                 if ("täglich".equals(a.wiederholung)) {
-                    // Immer hinzufügen
-                    result.add(a);
+                    result.add(a);// Immer hinzufügen
                 } else if ("wöchentlich".equals(a.wiederholung)) {
                     if (aufgabenDatum != null) {
                         Calendar aufgabenCal = Calendar.getInstance();
@@ -194,13 +193,13 @@ public class Tagesplan extends AppCompatActivity {
                         int aufgabenWochentag = aufgabenCal.get(Calendar.DAY_OF_WEEK);
 
                         if (aufgabenWochentag == heuteWochentag) {
-                            result.add(a);
+                            result.add(a);//gleicher Wochentag - anzeigen
                         }
                     }
                 } else {
                     // Keine Wiederholung, exaktes Datum
                     if (aufgabenDatum != null && sdf.format(aufgabenDatum).equals(sdf.format(heute))) {
-                        result.add(a);
+                        result.add(a); //nur anzeigen, wenn Datum heute ist
                     }
                 }
             } catch (Exception e) {

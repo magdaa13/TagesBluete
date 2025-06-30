@@ -127,7 +127,7 @@ public class Registrieren extends AppCompatActivity {
                             startActivity(new Intent(Registrieren.this, StartUebersicht.class));
                             finish();
                         })
-                        .setCancelable(false)
+                        .setCancelable(false) //Benutzer muss eine Option auswählen und kann den Dialog nicht schließen
                         .show();
             });
 
